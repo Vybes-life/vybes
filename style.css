@@ -1842,7 +1842,7 @@ color:white;
   width: 90%;
   max-width: 37.5rem; /* 600px in rem */
   height: 85vh;
-  border-radius: calc(24*var(--ratio);
+  border-radius: calc(24*var(--ratio));
   position: relative;
   display: flex;
   flex-direction: column;
