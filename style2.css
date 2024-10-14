@@ -2244,7 +2244,7 @@ font-size: 0.8125rem; /* 13px */
 #formContainer {
 width: 85%;
 height: 70vh;
-border-radius: 0;
+border-radius: calc(24*var(--ratio));
 }
 
 .form-header {
