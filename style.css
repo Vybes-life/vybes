@@ -171,7 +171,7 @@ body.page-load-transition {
 }
 
 .logo{
-  font-family: 'Cinzel Decorative';
+  font-family: 'Cinzel Decorative', sans-serif;
   font-weight: 700;
   font-size: calc(95 * var(--ratio));
 
@@ -205,7 +205,7 @@ body.page-load-transition {
 }
 
 #animated-paragraph {
-  font-family: 'Philosopher';
+  font-family: 'Philosopher', sans-serif;
   font-weight: 700;
   font-style: italic;
   text-align: center;
@@ -250,7 +250,7 @@ body.page-load-transition {
 }
 
 .men-button{
-  font-family: 'Cinzel Decorative';
+  font-family: 'Cinzel Decorative', sans-serif;
   height:calc(48*var(--ratio));
   font-size: calc(24*var(--ratio));
   font-weight: bold;
@@ -273,7 +273,7 @@ body.page-load-transition {
 
 
 .women-button{
-  font-family: 'Cinzel Decorative';
+  font-family: 'Cinzel Decorative', sans-serif;
   height:calc(48*var(--ratio));
   font-size: calc(24*var(--ratio));
   font-weight: bold;
@@ -443,11 +443,11 @@ body.page-load-transition {
   transform: rotate(180deg);
   font-size: calc(74*var(--ratio));
   margin-left:calc(-30*var(--ratio));
-  margin-right:calc(-40*var(--ratio));
+  margin-right:calc(-57*var(--ratio));
 }
 
 .vertical-text {
-  font-family: 'Cinzel Decorative', serif;
+  font-family: 'Cinzel Decorative', sans-serif;
   font-size: calc(76*var(--ratio));
   letter-spacing: 0px;
   color: #000;
@@ -456,8 +456,8 @@ body.page-load-transition {
 
 .main-image-container {
   position: relative;
-  width: 64%;
-  height: 69%;
+  width: 62.17%;
+  height: 70.08%;
   top:-2.5%;
   perspective: 1000px;
 }
@@ -528,7 +528,7 @@ color:white;
   position: absolute;
   top: -12%;
   width: 100%;
-  font-family: 'Cinzel Decorative';
+  font-family: 'Cinzel Decorative', sans-serif;
   color: black;
   font-size: calc(64*var(--ratio));
   z-index: 10;
@@ -541,7 +541,7 @@ color:white;
   bottom: -30%;
   width: 100%;
   height: calc(172*var(--ratio));
-  font-family: 'Cinzel Decorative';
+  font-family: 'Cinzel Decorative', sans-serif;
   color: black;
   font-size: calc(60*var(--ratio));
   line-height: 100%; /* Adjusted line height for better spacing */
@@ -573,7 +573,7 @@ color:white;
 .right-part{
   height: 75%; /* Visible area for 5 thumbnails */
   width: calc(200*var(--ratio));
-  margin-left:2%;
+  margin-left:calc(17*var(--ratio));
   
   overflow: hidden;
 }
@@ -680,7 +680,7 @@ color:white;
 }
 
 .blog_txt{
-  font-family: 'Cinzel Decorative';
+  font-family: 'Cinzel Decorative', sans-serif;
   font-weight: bold;
   font-size: calc(64*var(--ratio));
   position: absolute;
@@ -732,7 +732,7 @@ color:white;
   padding: calc(0*var(--ratio)) calc(10*var(--ratio)) calc(0*var(--ratio)) calc(10*var(--ratio));
   text-align:center;
   border-radius: 0 0 calc(24*var(--ratio)) calc(24*var(--ratio));
-  font-family: 'Philosopher';
+  font-family: 'Philosopher', sans-serif;
   
   
 }
@@ -860,11 +860,11 @@ color:white;
 }
 
 .slogan{
-  font-family: 'Philosopher';
+  font-family: 'Philosopher', sans-serif;
   font-weight: 700;
   font-size: calc(73 * var(--ratio));
   line-height: calc(74 * var(--ratio));
-  font-family: Philosopher;
+  
   font-weight: 700;
   overflow: visible;
   text-decoration: none;
@@ -1019,7 +1019,7 @@ color:white;
   position: absolute;
   top:4.1811%;
   text-align: center;
-  font-family: 'Philosopher';
+  font-family: 'Philosopher', sans-serif;
   font-weight: 200;
   font-style: italic;
   font-size:calc(31*var(--ratio));
@@ -1034,7 +1034,7 @@ color:white;
   top:50.707%;
   left:11.42857%;
   right:11.42%;
-  font-family: 'Philosopher';
+  font-family: 'Philosopher', sans-serif;
   font-weight: bold;
   text-align:center;
   font-size: calc(30*var(--ratio));
@@ -1302,7 +1302,7 @@ color:white;
 
 
 .faq-txt{
-  font-family: 'Cinzel Decorative';
+  font-family: 'Cinzel Decorative', sans-serif;
   font-size: calc(56*var(--ratio));
 }
 
@@ -1323,7 +1323,7 @@ color:white;
 }
 
 .faq-list {
-  font-family: 'Philosopher' sans-serif;
+  font-family: 'Philosopher', sans-serif;
   flex-grow: 1;
   overflow-y: auto;
   list-style-type: none;
@@ -1448,7 +1448,7 @@ color:white;
 }
 
 .com-txt{
-  font-family: 'Cinzel Decorative';
+  font-family: 'Cinzel Decorative', sans-serif;
   font-weight: 900;
   position: absolute;
   top:5%;
@@ -1465,7 +1465,7 @@ color:white;
 
 
 .collab-txt{
-  font-family: 'Cinzel Decorative';
+  font-family: 'Cinzel Decorative', sans-serif;
   font-weight: 900;
   position: absolute;
   top:7%;
@@ -1587,7 +1587,7 @@ color:white;
 
 
 .reserv{
-  font-family: 'Philosopher' sans-serif;
+  font-family: 'Philosopher',sans-serif;
   font-weight: 900;
   font-style: italic;
   font-size:calc(18*var(--ratio));
@@ -1682,7 +1682,7 @@ color:white;
     top:51.587%;
     left:11.42857%;
     right:11.42%;
-    font-family: 'Philosopher';
+    font-family: 'Philosopher', sans-serif;
     font-weight: bold;
     text-align:center;
     font-size: calc(30*var(--ratio));
@@ -1742,7 +1742,7 @@ color:white;
   }
 
   .faq-txt{
-    font-family: 'Cinzel Decorative';
+    font-family: 'Cinzel Decorative', sans-serif;
     font-size: calc(64*var(--ratio));
   }
 
@@ -1785,21 +1785,23 @@ color:white;
 
   }
   .vertical-text{
-    font-size: calc(96*var(--ratio));
+    font-size: calc(88*var(--ratio));
   }
   .main-image-container{
     top:-1%;
+    width:calc(557*var(--ratio));
+    height:calc(788*var(--ratio));
   }
 
   .image-text-top{
-    font-size:calc(72*var(--ratio));
+    font-size:calc(80*var(--ratio));
     top:-10%;
   }
 
   .image-text-bottom{
     bottom:-24%;
   }
- .up-arrow{
+  .up-arrow{
     position: absolute;
     width:calc(64*var(--ratio));
     top:7%;
@@ -1810,6 +1812,10 @@ color:white;
     width:calc(64*var(--ratio));
     bottom:6%;
     right:6.5%
+  }
+
+  .right-part{
+    height: calc(840*var(--ratio));
   }
   #animated-paragraph{
     line-height: calc(36*var(--ratio));
@@ -1849,7 +1855,7 @@ color:white;
   width: 90%;
   max-width: 37.5rem; /* 600px in rem */
   height: 85vh;
-  border-radius: calc(24*var(--ratio));
+  border-radius: 1.5rem;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -2213,7 +2219,7 @@ color:white;
 @media (max-width: 768px) {
 #formContainer {
 width: 85%;
-height: 80vh;
+height: 70vh;
 max-height: 37.5rem; /* 600px */
 }
 
@@ -2260,9 +2266,9 @@ font-size: 0.8125rem; /* 13px */
 
 @media (max-width: 480px) {
 #formContainer {
-width: 85%;
-height: 80vh;
-border-radius: calc(24*var(--ratio);
+width: 100%;
+height: 100vh;
+border-radius: 0;
 }
 
 .form-header {
