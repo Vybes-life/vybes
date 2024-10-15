@@ -1794,15 +1794,15 @@ color:white;
   }
   .up-arrow{
     position: absolute;
-    width:calc(48*var(--ratio));
+    width:calc(64*var(--ratio));
     top:7%;
-    right:7.4%
+    right:6.5%
   }
   .down-arrow{
     position: absolute;
-    width:calc(48*var(--ratio));
+    width:calc(64*var(--ratio));
     bottom:6%;
-    right:7.4%
+    right:6.5%
   }
   #animated-paragraph{
     line-height: calc(36*var(--ratio));
