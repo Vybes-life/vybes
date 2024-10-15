@@ -1,6 +1,6 @@
 
   const paragraph = document.getElementById('animated-paragraph');
-  const text = "Vybes creates personalized, exclusive style reports tailored just for you. Every detail is crafted to elevate your appearance and make you stand out. From head to toe, Vybes transforms your look with precision and style.";
+  const text = "Vybex creates personalized, exclusive style reports tailored just for you. Every detail is crafted to elevate your appearance and make you stand out. From head to toe, Vybex transforms your look with precision and style.";
   const words = text.split(' ');
 
   const custom_width= document.body.clientWidth;
@@ -8,7 +8,7 @@
   let ratio= custom_width/design_width;
   
   const specialWords = {
-    'Vybes': { 
+    'Vybex': { 
       glowStyle: `font-size: ${26*ratio}px; margin-right: ${8*ratio}px; color: black;`, 
       shrinkStyle: `font-size: ${22*ratio}px; margin-right: ${8*ratio}px; color: black;`,
       index: 0 
