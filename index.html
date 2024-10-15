@@ -1109,6 +1109,7 @@
   
   <script src="blogs.js"></script>
   <script type="module">
+    import 'https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs';
     function saveScrollPosition() {
       sessionStorage.setItem('scrollPosition', window.scrollY); // Store current scroll position
     }
@@ -1129,7 +1130,7 @@
         window.location.href='men_index.html';
       },1500);
     });
-    import 'https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs';
+    
     function hideMask() {
             const mask = document.getElementById('mask');
             mask.classList.add('hidden');
@@ -1152,7 +1153,7 @@
 
     window.onload = function() {
       restoreScrollPosition();
-      const mask = document.getElementById('mask');
+      
 
         
         document.body.classList.add('page-load-transition');
