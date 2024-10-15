@@ -1488,27 +1488,25 @@ color:white;
   overflow: hidden;
 }
 
-.socials{
+.socials {
   border-radius: calc(24 * var(--ratio)) calc(48 * var(--ratio)) calc(48 * var(--ratio)) calc(24 * var(--ratio));
-  height:calc(274*var(--ratio));
-  background-color: rgba(255, 241, 242,0.75);
+  height: calc(274 * var(--ratio));
+  background-color: rgba(255, 241, 242, 0.75);
   overflow: visible;
   display: grid;
   grid-template-columns: 40% 50%;
   align-items: center;
-  gap:9%;
-  padding: 14% 12% 14% 12%;
+  gap: 9%;
+  padding: 14% 12%;
 }
 
 .social-container {
   width: calc(124 * var(--ratio));
-  height: 100%; /* Ensures the container fills the parent height */
+  height: 100%;
   position: relative;
   display: flex;
   justify-content: space-evenly;
-  
   align-items: center;
- /* Ensures content doesn't overflow out of the container */
 }
 
 .bo {
@@ -1516,10 +1514,8 @@ color:white;
   flex-direction: column;
   align-items: center;
   gap: calc(10 * var(--ratio));
- 
-  width: fit-content; /* Adjust width based on content */
-  height: fit-content; /* Adjust height based on content */
-   /* Adds padding to ensure content has some space */
+  width: fit-content;
+  height: fit-content;
 }
 
 .bo1, .bo2 {
@@ -1529,41 +1525,52 @@ color:white;
 }
 
 .bo1 {
-  top: 0; /* Adjust the initial position to be inside the container */
+  top: 0;
   left: 0;
-  
   animation: moveUp 3s infinite ease-in-out;
 }
 
 .bo2 {
-  top: 50%; /* Adjust the initial position to be inside the container */
+  top: 50%;
   right: 0;
-  
   animation: moveDown 3s infinite ease-in-out;
 }
 
 .insta, .mail, .twitter, .youtube {
-  width: calc(50*var(--ratio)); /* Set a fixed width for each icon */
-  height: calc(50 * var(--ratio)); /* Set a fixed 
-  
-  height for each icon */
+  width: calc(50 * var(--ratio));
+  height: calc(50 * var(--ratio));
+  display: flex;
+  justify-content: center;
+  align-items: center;
   overflow: hidden;
-  object-fit: contain; /* Keep the image aspect 
-  ratio */
-  border-radius: calc(8*var(--ratio));
+  border-radius: calc(8 * var(--ratio));
   box-shadow: 
     calc(0 * var(--ratio)) calc(12.29 * var(--ratio)) calc(15.36 * var(--ratio)) calc(-3.07 * var(--ratio)) rgba(0, 0, 0, 0.1),
     calc(0 * var(--ratio)) calc(4.91 * var(--ratio)) calc(6.14 * var(--ratio)) calc(-3.69 * var(--ratio)) rgba(0, 0, 0, 0.1);
 }
 
+.insta img, .mail img, .twitter img, .youtube img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
 .mail {
-  padding: 16%;
   background-color: white;
+}
+
+.mail img {
+  width: 68%;
+  height: 68%;
 }
 
 .youtube {
   background-color: red;
-  padding: 5%;
+}
+
+.youtube img {
+  width: 90%;
+  height: 90%;
 }
 
 @keyframes moveUp {
