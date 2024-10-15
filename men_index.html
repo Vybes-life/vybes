@@ -21,6 +21,8 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="preload" href="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" as="script">
+
   <title>Vybes</title>
 </head>
 
@@ -1094,7 +1096,7 @@
   </script>
   <script src="formfinal.js"></script>  
   <script src="blogs.js"></script>
-  <script>
+  <script type="module">
     function saveScrollPosition() {
       sessionStorage.setItem('scrollPosition', window.scrollY); // Store current scroll position
     }
@@ -1115,6 +1117,26 @@
         window.location.href='index.html';
       },1500);
     });
+    
+    function hideMask() {
+            const mask = document.getElementById('mask');
+            mask.classList.add('hidden');
+        }
+
+        // Check if the DOM is already loaded
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                setTimeout(hideMask, 2000);
+            });
+        } else {
+            // DOM is already loaded
+            setTimeout(hideMask, 2000);
+        }
+
+        // Fallback to ensure the mask is hidden
+        window.addEventListener('load', () => {
+            setTimeout(hideMask, 2500);
+        });
 
     window.onload = function() {
       restoreScrollPosition();
@@ -1127,12 +1149,7 @@
         document.body.classList.remove('page-load-transition');
     }, 700);
       
-    const mask = document.getElementById('mask');
-
-        setTimeout(() => {
-            mask.classList.add('hidden');
-          }, 2500);  // Mask disappears after 3 seconds
-    };
+    
 
     window.onbeforeunload = function() {
         saveScrollPosition(); // Ensure scroll position is saved before page unloads
