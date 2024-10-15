@@ -2219,7 +2219,7 @@ color:white;
 @media (max-width: 768px) {
 #formContainer {
 width: 85%;
-height: 70vh;
+height: 80vh;
 max-height: 37.5rem; /* 600px */
 }
 
@@ -2266,9 +2266,9 @@ font-size: 0.8125rem; /* 13px */
 
 @media (max-width: 480px) {
 #formContainer {
-width: 100%;
-height: 100vh;
-border-radius: 0;
+width: 85%;
+height: 80vh;
+border-radius: calc(24*var(--ratio));
 }
 
 .form-header {
