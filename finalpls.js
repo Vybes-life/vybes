@@ -194,7 +194,7 @@ function updateBottomText(index) {
 
 function updateThumbnails(index) {
   const thumbnails = document.querySelectorAll(".thumbnail");
-  const thumbnailHeight = thumbnails[0].clientHeight+20;
+  const thumbnailHeight = thumbnails[0].clientHeight-10;
   let scrollAmount = thumbnailHeight * index;
   thumbnailList.style.transform = `translateY(-${scrollAmount}px)`;
 
