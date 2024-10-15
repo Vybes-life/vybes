@@ -258,8 +258,13 @@ body.page-load-transition {
   color:#B3A0F7;
   background:white;
   cursor: pointer;
-  
+  animation:pulb 1s infinite ease-in-out alternate;
   border:calc(3*var(--ratio)) solid black;
+}
+
+@keyframes pulb {
+  from { transform: scale(0.95);}
+  to {transform: scale(1);}
 }
 
 .men-button:hover{
