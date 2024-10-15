@@ -1138,16 +1138,16 @@
         // Check if the DOM is already loaded
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => {
-                setTimeout(hideMask, 2500);
+                setTimeout(hideMask, 2000);
             });
         } else {
             // DOM is already loaded
-            setTimeout(hideMask, 2500);
+            setTimeout(hideMask, 2000);
         }
 
         // Fallback to ensure the mask is hidden
         window.addEventListener('load', () => {
-            setTimeout(hideMask, 3000);
+            setTimeout(hideMask, 2500);
         });
 
     window.onload = function() {
