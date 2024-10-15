@@ -1805,13 +1805,13 @@ color:white;
     position: absolute;
     width:calc(64*var(--ratio));
     top:7%;
-    right:6.5%
+    right:7.4%
   }
   .down-arrow{
     position: absolute;
     width:calc(64*var(--ratio));
     bottom:6%;
-    right:6.5%
+    right:7.4%
   }
 
   .right-part{
