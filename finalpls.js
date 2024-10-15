@@ -11,27 +11,27 @@ let r = c_width / d_width;
 
 const thumbnailSets = [
   [
-    "https://picsum.photos/200/300?random=1", 
-    "https://picsum.photos/200/300?random=2",
-    "https://picsum.photos/200/300?random=3",
-    "https://picsum.photos/200/300?random=4",
-    "https://picsum.photos/200/300?random=5",
-    "https://picsum.photos/200/300?random=6",
-    "https://picsum.photos/200/300?random=7",
-    "https://picsum.photos/200/300?random=8",
-    "https://picsum.photos/200/300?random=9",
-    "https://picsum.photos/200/300?random=10",
-    "https://picsum.photos/200/300?random=11",
-    "https://picsum.photos/200/300?random=12",
-    "https://picsum.photos/200/300?random=13",
-    "https://picsum.photos/200/300?random=14", 
-    "https://picsum.photos/200/300?random=15",
-    "https://picsum.photos/200/300?random=16",
-    "https://picsum.photos/200/300?random=17",
-    "https://picsum.photos/200/300?random=18",
-    "https://picsum.photos/200/300?random=19",
-    "https://picsum.photos/200/300?random=20",
-    "https://picsum.photos/200/300?random=21"
+    "https://i.imgur.com/ydrbxhe.png", 
+    "https://i.imgur.com/yvV7asI.png",
+    "https://i.imgur.com/zZJapPg.png",
+    "https://i.imgur.com/zCEDa1o.png",
+    "https://i.imgur.com/cCiYkT2.png",
+    "https://i.imgur.com/lgxRHUu.png",
+    "https://i.imgur.com/i207nQF.png",
+    "https://i.imgur.com/UKedYob.png",
+    "https://i.imgur.com/0Eew4T1.png",
+    "https://i.imgur.com/5kbBlf4.png",
+    "https://i.imgur.com/EeMTzjp.png",
+    "https://i.imgur.com/WXGWCMf.png",
+    "https://i.imgur.com/N0l50aj.png",
+    "https://i.imgur.com/1QAD4iz.png", 
+    "https://i.imgur.com/2hNjuer.png",
+    "https://i.imgur.com/IIYVgEc.png",
+    "https://i.imgur.com/tE8RvdY.png",
+    "https://i.imgur.com/0QHb8EJ.png",
+    "https://i.imgur.com/yCo4Yhl.png",
+    "https://i.imgur.com/HSjbd69.png",
+    "https://i.imgur.com/VafJ60Q.png"
   ],
   [
     "https://picsum.photos/200/300?random=22", 
@@ -105,14 +105,15 @@ const bottomTextColors = [
 ];
 
 // Before and after images (from chan.js)
+
 const beforeImages = [
-  "https://via.placeholder.com/800x400/FFDDC1/333333?text=Before+1",
+  "https://i.imgur.com/YwQELkA.jpeg",
   "https://picsum.photos/200/300?random=22",
   "https://picsum.photos/200/300?random=43", 
 ];
 
 const afterImages = [
-  "https://via.placeholder.com/800x400/98C1D9/333333?text=After+1",
+  "https://i.imgur.com/JRLSsvJ.jpeg",
   "https://via.placeholder.com/800x400/4682B4/333333?text=After+2",
   "https://via.placeholder.com/800x400/6495ED/333333?text=After+3"
 ];
