@@ -305,7 +305,7 @@ body.page-load-transition {
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: fill;
   pointer-events: none;
 }
 
@@ -475,7 +475,7 @@ body.page-load-transition {
 .main-image img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: fill;
   transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out; /* Smooth transition */
 }
 
@@ -594,7 +594,7 @@ color:white;
 .thumbnail {
   width: 100%;
   height: calc(132*var(--ratio));
-  object-fit: cover;
+  object-fit: fill;
   margin: calc(16*var(--ratio)) 0;
   cursor: pointer;
   border-radius:calc(16*var(--ratio));
