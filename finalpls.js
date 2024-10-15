@@ -9,10 +9,6 @@ let c_width = document.body.clientWidth;
 let d_width = 1440;
 let r = c_width / d_width;
 
-let touchStartY = 0;
-let touchEndY = 0;
-let currentTranslateY = 0;
-
 const thumbnailSets = [
   [
     "https://picsum.photos/200/300?random=1", 
@@ -146,13 +142,10 @@ document.addEventListener("DOMContentLoaded", function() {
     } else {
         console.error("Right arrow button not found");
     }
-    thumbnailContainer.addEventListener('touchstart', handleTouchStart, false);
-    thumbnailContainer.addEventListener('touchmove', handleTouchMove, false);
-    thumbnailContainer.addEventListener('touchend', handleTouchEnd, false);
+
     // Log the current state for debugging
     console.log("Initial thumbnail set:", currentThumbnailSet);
     console.log("Number of thumbnail sets:", thumbnailSets.length);
-  
 });
 
 function updateMainImage(index) {
@@ -203,16 +196,8 @@ function updateThumbnails(index) {
   const thumbnails = document.querySelectorAll(".thumbnail");
   const thumbnailHeight = thumbnails[0].clientHeight+5;
   let scrollAmount = thumbnailHeight * index;
-  const activePosition = thumbnailHeight * index;
-  
-  // Adjust currentTranslateY to keep the active thumbnail visible
-  if (activePosition < currentTranslateY) {
-    currentTranslateY = activePosition;
-  } else if (activePosition + thumbnailHeight > currentTranslateY + thumbnailContainer.clientHeight) {
-    currentTranslateY = activePosition + thumbnailHeight - thumbnailContainer.clientHeight;
-  }
   thumbnailList.style.transform = `translateY(-${scrollAmount}px)`;
-  thumbnailList.style.transform = `translateY(${-currentTranslateY}px)`;
+  
 
   thumbnails.forEach(thumbnail => thumbnail.classList.remove('active'));
   thumbnails[index].classList.add('active');
@@ -297,40 +282,6 @@ function updateThumbnailSet() {
       thumbnailList.appendChild(thumbnail);
   });
   updateBeforeAfterImages();
-}
-
-function handleTouchStart(event) {
-  touchStartY = event.touches[0].clientY;
-}
-
-function handleTouchMove(event) {
-  touchEndY = event.touches[0].clientY;
-  const touchDelta = touchStartY - touchEndY;
-  const newTranslateY = currentTranslateY + touchDelta;
-  
-  // Apply the new translation, but don't update currentTranslateY yet
-  thumbnailList.style.transform = `translateY(${-newTranslateY}px)`;
-  
-  // Prevent default to stop scrolling of the whole page
-  event.preventDefault();
-}
-
-function handleTouchEnd() {
-  const touchDelta = touchStartY - touchEndY;
-  currentTranslateY += touchDelta;
-  
-  // Ensure we don't scroll past the bounds of the thumbnail list
-  const maxTranslateY = thumbnailList.clientHeight - thumbnailContainer.clientHeight;
-  currentTranslateY = Math.max(0, Math.min(currentTranslateY, maxTranslateY));
-  
-  // Apply the final translation with a smooth transition
-  thumbnailList.style.transition = 'transform 0.3s ease-out';
-  thumbnailList.style.transform = `translateY(${-currentTranslateY}px)`;
-  
-  // Reset the transition after it completes
-  setTimeout(() => {
-    thumbnailList.style.transition = '';
-  }, 300);
 }
 
 
