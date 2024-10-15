@@ -452,8 +452,8 @@ body.page-load-transition {
 
 .main-image-container {
   position: relative;
-  width: 64%;
-  height: 69%;
+  width: 62.17%;
+  height: 70.08%;
   top:-2.5%;
   perspective: 1000px;
 }
@@ -1777,15 +1777,17 @@ color:white;
     font-size: calc(14*var(--ratio));
 
   }
-  .vertical-text{
-    font-size: calc(96*var(--ratio));
+ .vertical-text{
+    font-size: calc(88*var(--ratio));
   }
   .main-image-container{
     top:-1%;
+    width:calc(557*var(--ratio));
+    height:calc(788*var(--ratio));
   }
 
   .image-text-top{
-    font-size:calc(72*var(--ratio));
+    font-size:calc(80*var(--ratio));
     top:-10%;
   }
 
@@ -1796,13 +1798,17 @@ color:white;
     position: absolute;
     width:calc(64*var(--ratio));
     top:7%;
-    right:6.5%
+    right:7.4%
   }
   .down-arrow{
     position: absolute;
     width:calc(64*var(--ratio));
     bottom:6%;
-    right:6.5%
+    right:7.4%
+  }
+
+  .right-part{
+    height: calc(840*var(--ratio));
   }
   #animated-paragraph{
     line-height: calc(36*var(--ratio));
