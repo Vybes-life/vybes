@@ -1130,20 +1130,20 @@
 
     window.onload = function() {
       restoreScrollPosition();
-
-    // Add class for fade-in effect on page load
-    document.body.classList.add('page-load-transition');
-    
-    // Remove the fade-in effect after the transition is complete
-    setTimeout(function() {
-        document.body.classList.remove('page-load-transition');
-    }, 700);
-      
-    const mask = document.getElementById('mask');
+      const mask = document.getElementById('mask');
 
         setTimeout(() => {
             mask.classList.add('hidden');
           }, 2500);  // Mask disappears after 3 seconds
+        // Add class for fade-in effect on page load
+        document.body.classList.add('page-load-transition');
+        
+        // Remove the fade-in effect after the transition is complete
+        setTimeout(function() {
+            document.body.classList.remove('page-load-transition');
+        }, 700);
+          
+    
     };
 
     window.onbeforeunload = function() {
