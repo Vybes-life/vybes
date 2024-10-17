@@ -1880,6 +1880,7 @@ color:white;
   opacity: 0;
   transform: translateY(1.25rem); /* 20px in rem */
   transition: var(--transition);
+overflow:hidden;
 }
 
 .form-header {
