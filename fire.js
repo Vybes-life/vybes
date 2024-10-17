@@ -37,10 +37,13 @@ async function fetchCardData() {
             size: querySnapshot.size
         });
         
-        const cardsData = querySnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-        }));
+        const cardsData = [];
+        querySnapshot.forEach((doc) => {
+            cardsData.push({
+                id: doc.id,
+                ...doc.data()
+            });
+        });
         
         if (cardsData.length === 0) {
             cardContainer.innerHTML = 'No cards found in the database.';
@@ -61,7 +64,6 @@ async function fetchCardData() {
 
 function renderCards(data) {
     const cardContainer = document.querySelector('.sliderb');
-    cardContainer.innerHTML = ''; // Clear existing cards
 
     data.forEach((card, index) => {
         const cardElement = document.createElement('div');
@@ -88,7 +90,7 @@ function initializeSlider() {
     cards = document.querySelectorAll('.card');
 
     if (cards.length > positions.length) {
-        const extraCount = cards.length - positions.length;
+        let extraCount = cards.length - positions.length;
         for (let i = 1; i <= extraCount; i++) {
             positions.push(`extra${i}`);
         }
@@ -98,20 +100,21 @@ function initializeSlider() {
         card.setAttribute('data-position', positions[index]);
     });
 
-    const nextButton = document.querySelector('.nex');
-    const prevButton = document.querySelector('.pre');
-    const sliderContainer = document.querySelector('.sliderb');
+    document.querySelector('.nex').addEventListener('click', () => {
+        moveSlide(1);
+    });
 
-    nextButton.addEventListener('click', () => moveSlide(1));
-    prevButton.addEventListener('click', () => moveSlide(-1));
+    document.querySelector('.pre').addEventListener('click', () => {
+        moveSlide(-1);
+    });
 
-    let startX;
+    let startX = 0;
 
-    sliderContainer.addEventListener('touchstart', (e) => {
+    document.querySelector('.sliderb').addEventListener('touchstart', (e) => {
         startX = e.touches[0].clientX;
     }, { passive: true });
 
-    sliderContainer.addEventListener('touchend', (e) => {
+    document.querySelector('.sliderb').addEventListener('touchend', (e) => {
         const endX = e.changedTouches[0].clientX;
         if (startX > endX + 50) {
             moveSlide(1); // Swipe left to move right
@@ -124,9 +127,14 @@ function initializeSlider() {
 }
 
 function moveSlide(direction) {
-    positions.unshift(positions.pop());
+    const newPositions = positions.slice();
+    if(direction === 1) {
+        newPositions.push(newPositions.shift());
+    } else if(direction === -1) {
+        newPositions.unshift(newPositions.pop());
+    }
     cards.forEach((card, index) => {
-        card.dataset.position = positions[index];
+        card.dataset.position = newPositions[index];
     });
 }
 
