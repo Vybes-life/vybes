@@ -1600,6 +1600,10 @@ color:white;
   
 }
 
+.reserv a{
+  font-size:calc(14*var(--ratio));
+}
+
 
 @media only screen and (max-width:1000px){
   
