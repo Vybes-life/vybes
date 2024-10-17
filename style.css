@@ -1608,7 +1608,7 @@ color:white;
 .reserv a {
   font-size: calc(14 * var(--ratio));
   display: block;
-  margin-top:-6%;
+  margin-top:10%;
 }
 
 #hu{
@@ -1787,7 +1787,7 @@ color:white;
 .reserv a {
     font-size: calc(14 * var(--ratio));
     display: block;
-    margin-top:-16%;
+    margin-top:10%;
   }		
 	
   .blogs{
