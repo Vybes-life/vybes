@@ -1502,7 +1502,7 @@ color:white;
   grid-template-columns: 40% 50%;
   align-items: center;
   gap: 9%;
-  padding: 14% 12%;
+  padding: 14% 12% 14% 8%;
 }
 
 .social-container {
