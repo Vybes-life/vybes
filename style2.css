@@ -1490,21 +1490,19 @@ color:white;
   border-radius: calc(24 * var(--ratio)) calc(48 * var(--ratio)) calc(48 * var(--ratio)) calc(24 * var(--ratio));
   height: calc(274 * var(--ratio));
   background-color: rgba(255, 241, 242, 0.75);
-  overflow: visible;
-  display: grid;
-  grid-template-columns: 40% 50%;
+  overflow: hidden;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 9%;
-  padding: 14% 12%;
+  gap: 3%;
+  padding: 14% 12% 14% 12%;
+
 }
 
 .social-container {
-  width: calc(124 * var(--ratio));
-  height: 100%;
+  width: 40%;
+  height: calc(200 * var(--ratio));
   position: relative;
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
 }
 
 .bo {
@@ -1529,7 +1527,7 @@ color:white;
 }
 
 .bo2 {
-  top: 50%;
+  bottom: 0;
   right: 0;
   animation: moveDown 3s infinite ease-in-out;
 }
@@ -1570,29 +1568,45 @@ color:white;
   width: 90%;
   height: 90%;
 }
-
 @keyframes moveUp {
   0% { top: 15%; }  /* Start in the middle of the container */
   50% { top: 0%; }  /* Move to the top of the container */
   100% { top: 15%; }  /* Return to the middle */
 }
-
 @keyframes moveDown {
   0% { top: -5%; }  /* Start in the middle-bottom of the container */
   50% { top: 15%; }  /* Move to the middle (where bo1 was initially) */
   100% { top: -5%; }  /* Return to the middle-bottom */
 }
 
-
-.reserv{
-  font-family: 'Philosopher' sans-serif;
+.reserv {
+  font-family: 'Philosopher', sans-serif;
   font-weight: 900;
   font-style: italic;
-  font-size:calc(18*var(--ratio));
-  line-height: calc(32*va(--ratio));
+  
+  width: 45%;
   
 }
 
+.fottxt{
+  font-family: 'Philosopher', sans-serif;
+  font-weight: 900;
+  font-style: italic;
+  font-size: calc(18 * var(--ratio));
+  line-height: calc(20 * var(--ratio));
+  
+
+}
+
+.reserv a {
+  font-size: calc(14 * var(--ratio));
+  display: block;
+  margin-top:-6%;
+}
+
+#hu{
+  margin-top:5%;
+}
 
 @media only screen and (max-width:1000px){
   
@@ -1763,6 +1777,11 @@ color:white;
   .faq-item .arrow {
     width: calc(28*var(--ratio));
   }
+.reserv a {
+    font-size: calc(14 * var(--ratio));
+    display: block;
+    margin-top:-16%;
+  }	
   .blogs{
     height:calc(639*var(--ratio));
   }
