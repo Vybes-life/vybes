@@ -615,31 +615,178 @@ function handleSendButtonClick(buttonElement) {
 }
 
 
-function handleFileUpload(event, index) {
+function compressImage(file, maxWidth, maxHeight, quality) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = function(event) {
+      const img = new Image();
+      img.src = event.target.result;
+      img.onload = function() {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > maxWidth) {
+            height *= maxWidth / width;
+            width = maxWidth;
+          }
+        } else {
+          if (height > maxHeight) {
+            width *= maxHeight / height;
+            height = maxHeight;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        
+        canvas.toBlob((blob) => {
+          resolve(blob);
+        }, file.type, quality);
+      };
+    };
+    reader.onerror = reject;
+  });
+}
+
+// IndexedDB setup
+const dbName = 'StyleProfileDB';
+const storeName = 'images';
+let db;
+
+const openDB = () => {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(dbName, 1);
+    request.onerror = (event) => reject("IndexedDB error: " + event.target.error);
+    request.onsuccess = (event) => {
+      db = event.target.result;
+      resolve(db);
+    };
+    request.onupgradeneeded = (event) => {
+      db = event.target.result;
+      db.createObjectStore(storeName, { keyPath: "id" });
+    };
+  });
+};
+
+const saveToIndexedDB = (id, imageBlob) => {
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction([storeName], "readwrite");
+    const store = transaction.objectStore(storeName);
+    const request = store.put({ id: id, image: imageBlob });
+    request.onerror = (event) => reject("Error saving to IndexedDB: " + event.target.error);
+    request.onsuccess = (event) => resolve(event.target.result);
+  });
+};
+
+const getFromIndexedDB = (id) => {
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction([storeName], "readonly");
+    const store = transaction.objectStore(storeName);
+    const request = store.get(id);
+    request.onerror = (event) => reject("Error retrieving from IndexedDB: " + event.target.error);
+    request.onsuccess = (event) => resolve(event.target.result ? event.target.result.image : null);
+  });
+};
+
+// Modified handleFileUpload function
+async function handleFileUpload(event, index) {
   const file = event.target.files[0];
   if (file) {
-    const preview = document.querySelector(`#image-preview-${index}`);
-    preview.style.display = 'block';
-
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      const base64Image = e.target.result;
-      preview.src = base64Image;
-
-      // Store image in chatState
+    try {
+      await openDB(); // Ensure DB is open
+      
+      const compressedBlob = await compressImage(file, 1024, 1024, 0.7); // Compress image
+      await saveToIndexedDB(index, compressedBlob); // Save to IndexedDB
+      
+      const preview = document.querySelector(`#image-preview-${index}`);
+      preview.style.display = 'block';
+      preview.src = URL.createObjectURL(compressedBlob);
+      
+      // Update chatState without storing the actual image data
       if (!chatState.images) {
         chatState.images = {};
       }
       chatState.images[index] = {
-        base64: base64Image,
         name: file.name,
-        type: file.type
+        type: file.type,
+        size: compressedBlob.size
       };
       saveChatState();
+    } catch (error) {
+      console.error('Error handling file upload:', error);
+      alert('There was an error uploading your image. Please try again.');
     }
-    reader.readAsDataURL(file);
   }
 }
+
+
+// Global variable to store the currency code
+let currencyCode = 'USD';
+let price2= 49.99; 
+
+
+
+function setPriceForCountry(countryCode) {
+  
+  let prices = {
+    'AE': { price: 89.99, currency: 'USD' },
+    'SA': { price: 79.99, currency: 'USD' },
+    'QA': { price: 89.99, currency: 'USD' },
+    'KW': { price: 74.99, currency: 'USD' },
+    'BH': { price: 68.99, currency: 'USD' },
+    'SG': { price: 79.99, currency: 'SGD' },
+    'JP': { price: 11990, currency: 'JPY' },
+    'KR': { price: 68.99, currency: 'USD' },
+    'HK': { price: 588, currency: 'HKD' },
+    'AU': { price: 99.95, currency: 'AUD' },
+    'NZ': { price: 99.95, currency: 'NZD' },
+    'CH': { price: 69.90, currency: 'CHF' },
+    'NO': { price: 729, currency: 'NOK' },
+    'DK': { price: 449, currency: 'DKK' },
+    'SE': { price: 679, currency: 'SEK' },
+    'GB': { price: 47.99, currency: 'GBP' },
+    'DE': { price: 54.99, currency: 'EUR' },
+    'FR': { price: 49.99, currency: 'EUR' },
+    'NL': { price: 49.99, currency: 'EUR' },
+    'US': { price: 49.99, currency: 'USD' },
+    'CA': { price: 69.99, currency: 'CAD' },
+    'IT': { price: 44.99, currency: 'EUR' },
+    'ES': { price: 39.99, currency: 'EUR' },
+    'TW': { price: 1399, currency: 'TWD' },
+    'IL': { price: 159, currency: 'ILS' },
+    'RU': { price: 3299, currency: 'RUB' },
+    'MY': { price: 179, currency: 'MYR' },
+    'CN': { price: 279, currency: 'CNY' },
+    'TH': { price: 1259, currency: 'THB' },
+    'BR': { price: 179, currency: 'BRL' },
+    'MX': { price: 599, currency: 'MXN' },
+    'TR': { price: 34.99, currency: 'USD' },
+    'ZA': { price: 31.99, currency: 'USD' },
+    'ID': { price: 28.99, currency: 'USD' },
+    'IN': { price: 24.99, currency: 'USD' },
+    'PH': { price: 1399, currency: 'PHP' }
+  };
+
+  console.log('Country Code:', countryCode);
+  let priceObj = prices[countryCode] || { price: 49.99, currency: 'USD' };
+  console.log('Price Object:', priceObj);
+
+  price2 = priceObj.price;
+  currencyCode = priceObj.currency;
+
+  console.log('Updated price2:', price2);
+  console.log('Updated currencyCode:', currencyCode);
+
+  // Update the displayed price
+  
+}
+setPriceForCountry(window.countryCode);
 
 function showPaymentOptions() {
   const chatContainer = document.getElementById('chatContainer');
@@ -692,6 +839,42 @@ function showPaymentOptions() {
   `;
   chatState.styleId = styleId;
 }
+
+function renderPayPalButton() {
+  console.log('Rendering PayPal button with:', currencyCode, price2);
+  paypal.Buttons({
+    createOrder: function(data, actions) {
+      return actions.order.create({
+        purchase_units: [{
+          amount: {
+            currency_code: currencyCode,
+            value: price2.toString()
+          }
+        }]
+      });
+    },
+    onApprove: function(data, actions) {
+      return actions.order.capture().then(function(details) {
+        handleSuccessfulPayment('PayPal', details);
+      });
+    }
+  }).render('#paypal-button-container');
+}
+
+function handleSuccessfulPayment(method, details) {
+  submitToGoogleSheets({
+    answers: chatState.answers,
+    images: chatState.images,
+    timestamp: new Date().toISOString(),
+    styleId: chatState.styleId,
+    paymentStatus: 'completed',
+    paymentMethod: method,
+    transactionId: details.id,
+    amount: `${currencyCode} ${window.price2}`
+  });
+  showCompletionMessage();
+}
+
 
 function processPayment() {
   const chatContainer = document.getElementById('chatContainer');
@@ -795,19 +978,24 @@ async function submitToGoogleSheets(data) {
   };
 
   // Process images
+  // Process images
   if (data.images) {
     for (let index in data.images) {
-      const image = data.images[index];
-      formData.images[index] = {
-        name: image.name,
-        type: image.type,
-        base64: image.base64
-      };
+      const imageInfo = data.images[index];
+      const imageBlob = await getFromIndexedDB(parseInt(index));
+      if (imageBlob) {
+        formData.images[index] = {
+          name: imageInfo.name,
+          type: imageInfo.type,
+          size: imageInfo.size,
+          base64: await blobToBase64(imageBlob)
+        };
+      }
     }
   }
 
   try {
-    const response = await fetch('https://script.google.com/macros/s/AKfycbw7GkL6POqMBEYCr0DjXBrKabZutHYyqaTRh-lp5oLcPip2LhjHYdXqgwVdeBlzdiRI/exec', {
+    const response = await fetch('https://script.google.com/macros/s/AKfycbx5YEUjsFtFCPXvyozDv36VWFdgFW_iO6kzdk_BPrL0G0yeBs81vZbdEIYKrOEBJKu3rQ/exec', {
       method: 'POST',
       body: JSON.stringify(formData),
       headers: {
@@ -822,4 +1010,14 @@ async function submitToGoogleSheets(data) {
     console.error('Error submitting to Google Sheets:', error);
     alert('There was an error submitting your form. Please try again.');
   }
+}
+
+// Utility function to convert Blob to Base64
+function blobToBase64(blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
 }
