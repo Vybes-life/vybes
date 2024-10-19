@@ -103,36 +103,6 @@ const questions = [
   }
 ];
 
-const instructions = [
-    "Edit answers: Click back, choose a new option or type, then press Enter or Send.",
-    "Be honest - there are no wrong answers in style!",
-    "Your responses shape your custom style guide - have fun with it!",
-    "For multiple-choice, click to select. For text, type and hit Enter/Send.",
-    "Upload clear, recent photos for the best style recommendations.",
-    "Provide accurate email, name, and country for your personalized style report.",
-    "Scroll up anytime to review or change your previous answers.",
-    "Almost done? Double-check your answers before the final submission.",
-    "Questions or issues? Contact support@vybex.life for assistance.",
-];
-
-let currentInstructionIndex = 0;
-const instructionsElement = document.querySelector('.instructions');
-
-function updateInstruction() {
-  instructionsElement.style.transform = 'translateY(-100%)';
-  setTimeout(() => {
-      currentInstructionIndex = (currentInstructionIndex + 1) % instructions.length;
-      instructionsElement.textContent = instructions[currentInstructionIndex];
-      instructionsElement.style.transform = 'translateY(0)';
-  }, 500);
-}
-
-// Initial instruction
-instructionsElement.textContent = instructions[0];
-
-// Rotate instructions every 5 seconds
-setInterval(updateInstruction, 5000);
-
 async function loadChatState() {
   const savedState = localStorage.getItem('chatState');
   if (savedState) {
