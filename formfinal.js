@@ -25,6 +25,15 @@ const questions = [
     ]
   },
   {
+    text: "Alright, superstar! Which style squad do you roll with?",
+    options: [
+      "Women's fashion",
+      "Men's fashion",
+      "Gender-neutral fashion",
+      { text: "My own fabulous category", allowOther: true }
+    ]
+  },
+  {
     text: "Colors can totally change the game! Any shades that make you feel like a superstar? Or ones that just aren't your jam?",
     input: "text",
     placeholder: "Spill the tea on your color loves and not-so-loves..."
@@ -94,19 +103,128 @@ const questions = [
   }
 ];
 
-// Load state from localStorage
-function loadChatState() {
+const instructions = [
+    "Edit answers: Click back, choose a new option or type, then press Enter or Send.",
+    "Be honest - there are no wrong answers in style!",
+    "Your responses shape your custom style guide - have fun with it!",
+    "For multiple-choice, click to select. For text, type and hit Enter/Send.",
+    "Upload clear, recent photos for the best style recommendations.",
+    "Provide accurate email, name, and country for your personalized style report.",
+    "Scroll up anytime to review or change your previous answers.",
+    "Almost done? Double-check your answers before the final submission.",
+    "Questions or issues? Contact support@vybex.life for assistance.",
+];
+
+let currentInstructionIndex = 0;
+const instructionsElement = document.querySelector('.instructions');
+
+function updateInstruction() {
+  instructionsElement.style.transform = 'translateY(-100%)';
+  setTimeout(() => {
+      currentInstructionIndex = (currentInstructionIndex + 1) % instructions.length;
+      instructionsElement.textContent = instructions[currentInstructionIndex];
+      instructionsElement.style.transform = 'translateY(0)';
+  }, 500);
+}
+
+// Initial instruction
+instructionsElement.textContent = instructions[0];
+
+// Rotate instructions every 5 seconds
+setInterval(updateInstruction, 5000);
+
+async function loadChatState() {
   const savedState = localStorage.getItem('chatState');
   if (savedState) {
-    chatState = JSON.parse(savedState);
-    return true;
+    try {
+      const parsedState = JSON.parse(savedState);
+      
+      // Restore images to IndexedDB
+      for (const [index, imageInfo] of Object.entries(parsedState.images || {})) {
+        if (imageInfo.base64) {
+          try {
+            const blob = await base64ToBlob(imageInfo.base64);
+            await saveToIndexedDB(parseInt(index), blob);
+            
+            // Update the preview
+            const preview = document.querySelector(`#image-preview-${index}`);
+            if (preview) {
+              preview.style.display = 'block';
+              preview.src = URL.createObjectURL(blob);
+            }
+          } catch (error) {
+            console.error(`Error processing image ${index}:`, error);
+          }
+        }
+      }
+      
+      // Remove base64 data from chatState to keep it light
+      delete parsedState.images;
+      chatState = parsedState;
+      
+      return true;
+    } catch (error) {
+      console.error('Error parsing saved state:', error);
+      return false;
+    }
   }
   return false;
 }
 
-// Save state to localStorage
-function saveChatState() {
-  localStorage.setItem('chatState', JSON.stringify(chatState));
+// Helper function to convert Base64 to Blob
+function base64ToBlob(base64) {
+  try {
+    const parts = base64.split(';base64,');
+    const contentType = parts[0].split(':')[1];
+    const raw = window.atob(parts[1]);
+    const rawLength = raw.length;
+    const uInt8Array = new Uint8Array(rawLength);
+    
+    for (let i = 0; i < rawLength; ++i) {
+      uInt8Array[i] = raw.charCodeAt(i);
+    }
+    
+    return new Blob([uInt8Array], { type: contentType });
+  } catch (error) {
+    console.error('Error converting base64 to blob:', error);
+    throw error;
+  }
+}
+
+// Modified saveChatState function
+async function saveChatState() {
+  const imagesToSave = {};
+  
+  for (const [index, imageInfo] of Object.entries(chatState.images || {})) {
+    try {
+      const imageBlob = await getFromIndexedDB(parseInt(index));
+      if (imageBlob) {
+        const base64 = await blobToBase64(imageBlob);
+        imagesToSave[index] = {
+          ...imageInfo,
+          base64: base64
+        };
+      }
+    } catch (error) {
+      console.error(`Error retrieving image ${index} from IndexedDB:`, error);
+    }
+  }
+  
+  const stateToSave = {
+    ...chatState,
+    images: imagesToSave
+  };
+  
+  localStorage.setItem('chatState', JSON.stringify(stateToSave));
+}
+// Utility function to convert Blob to Base64
+function blobToBase64(blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
 }
 
 function clearChatState() {
@@ -117,6 +235,20 @@ function clearChatState() {
     images: {},
     isComplete: false
   };
+}
+
+function loadPayPalScript(currency, callback) {
+  var script = document.createElement('script');
+  script.src = `https://www.paypal.com/sdk/js?client-id=AULAbl8hVQCkgkcBIT2-pwqUMR1ZX_50Idda9ByF5MEsAFC3QOkm35g9qrY51Crv-ZGH0GTcix8q34Cn&currency=${currency}&components=buttons,card-fields&enable-funding=venmo`;
+  script.onload = function () {
+      if (typeof callback === 'function') {
+          callback();
+      }
+  };
+  script.onerror = function () {
+      console.error('PayPal SDK script could not be loaded.');
+  };
+  document.head.appendChild(script);
 }
 
 // Event Listeners
@@ -131,10 +263,15 @@ document.getElementById('getStyledBtn').addEventListener('click', () => {
   }, 50);
 });
 
-document.querySelector('.close-btn').addEventListener('click', () => {
+// Modify the close button event listener
+document.querySelector('.close-btn').addEventListener('click', async () => {
   const overlay = document.getElementById('overlay');
   overlay.style.opacity = '0';
-  saveChatState(); // Save state before closing
+  try {
+    await saveChatState(); // Wait for saveChatState to complete
+  } catch (error) {
+    console.error('Error saving chat state:', error);
+  }
   setTimeout(() => overlay.style.display = 'none', 300);
 });
 
@@ -730,9 +867,79 @@ async function handleFileUpload(event, index) {
 let currencyCode = 'USD';
 let price2= 49.99; 
 
+const styles = `
+<style>
+  .payment-container {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 24px;
+    margin-top: 16px;
+  }
+  .payment-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+  .price-tag {
+    font-size: 32px;
+    font-weight: 700;
+    color: #4F46E5;
+    margin-bottom: 24px;
+  }
+  #rzp-button {
+    width: 100%;
+    padding: 12px 16px;
+    background-color: #4F46E5;
+    color: white;
+    font-weight: 700;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #rzp-button:hover {
+    background-color: #4338CA;
+    transform: scale(1.05);
+  }
+  #rzp-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.5);
+  }
+  #rzp-button svg {
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+  }
+  .info-text {
+    font-size: 14px;
+    color: #4B5563;
+    margin-top: 24px;
+  }
+  .info-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .info-item svg {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+  }
+  .animate__fadeIn {
+    animation: fadeIn 0.5s ease-in;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+</style>
+`;
 
-
-function setPriceForCountry(countryCode) {
+function setPriceForC(countryCod) {
   
   let prices = {
     'AE': { price: 89.99, currency: 'USD' },
@@ -769,24 +976,19 @@ function setPriceForCountry(countryCode) {
     'TR': { price: 34.99, currency: 'USD' },
     'ZA': { price: 31.99, currency: 'USD' },
     'ID': { price: 28.99, currency: 'USD' },
-    'IN': { price: 24.99, currency: 'USD' },
+    'IN': { price: 1499, currency: 'INR' },
     'PH': { price: 1399, currency: 'PHP' }
   };
 
-  console.log('Country Code:', countryCode);
-  let priceObj = prices[countryCode] || { price: 49.99, currency: 'USD' };
-  console.log('Price Object:', priceObj);
+  
+  let priceObj = prices[countryCod] || { price: 49.99, currency: 'USD' };
+
 
   price2 = priceObj.price;
-  currencyCode = priceObj.currency;
-
-  console.log('Updated price2:', price2);
-  console.log('Updated currencyCode:', currencyCode);
-
+  currencyCode = priceObj.currency;  
   // Update the displayed price
-  
 }
-setPriceForCountry(window.countryCode);
+
 
 function showPaymentOptions() {
   const chatContainer = document.getElementById('chatContainer');
@@ -794,63 +996,146 @@ function showPaymentOptions() {
 
   const typingIndicator = chatContainer.querySelector('.typing-indicator')?.parentElement;
   if (typingIndicator) typingIndicator.remove();
-
+  
   chatContainer.innerHTML += `
-      <div class="message assistant animate__animated animate__fadeIn">
-          <div class="message-content">
-              <h3>🎉 Amazing! Your style profile is complete!</h3>
-              <p>To receive your personalized style guide, please complete the payment:</p>
-              
-              <div class="payment-container p-4 bg-white rounded-lg shadow-md mt-4">
-                  <h4 class="text-xl font-semibold mb-4">Payment Details</h4>
-                  <div class="price-tag mb-4">
-                      <span class="text-3xl font-bold text-primary">${window.price}</span>
-                      
-                  </div>
-                  
-                  <div class="payment-form">
-                      <div class="mb-4">
-                          <label class="block text-gray-700 mb-2">Card Number</label>
-                          <input type="text" id="card-number" class="w-full p-2 border rounded" placeholder="4242 4242 4242 4242">
-                      </div>
-                      <div class="flex gap-4 mb-4">
-                          <div class="flex-1">
-                              <label class="block text-gray-700 mb-2">Expiry</label>
-                              <input type="text" id="card-expiry" class="w-full p-2 border rounded" placeholder="MM/YY">
-                          </div>
-                          <div class="flex-1">
-                              <label class="block text-gray-700 mb-2">CVC</label>
-                              <input type="text" id="card-cvc" class="w-full p-2 border rounded" placeholder="123">
-                          </div>
-                      </div>
-                      <button onclick="processPayment()" class="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-primary-dark transition-colors">
-                          Pay Now
-                      </button>
-                  </div>
-                  
-                  <div class="mt-4 text-sm text-gray-600">
-                      <p>🔒 Secure payment processing</p>
-                      <p>✨ Your Style ID: #${styleId}</p>
-                      <p>⏱️ Delivery: 2-24 hours</p>
-                  </div>
-              </div>
+    <div class="message assistant animate__animated animate__fadeIn">
+      <div class="message-content">
+        <h3>🎉 Amazing! Your style profile is complete!</h3>
+        <p>To receive your personalized style guide, please complete the payment:</p>
+        
+        <div class="payment-container p-4 bg-white rounded-lg shadow-md mt-4">
+        
+          <div class="payment-container">
+          <h4 class="payment-title">Payment Details</h4>
+          <div class="price-tag">${window.price}</div>
+          
+          <div id="paypal-button-container" style="margin-bottom: 16px;"></div>
+          <div id="razorpay-button-container" style="display: none; margin-bottom: 16px;">
+            <button id="rzp-button">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+              </svg>
+              Pay with Razorpay
+            </button>
           </div>
+          
+          <div class="info-text">
+            <div class="info-item">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+              </svg>
+              Secure payment processing
+            </div>
+            <div class="info-item">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+              </svg>
+              Your Style ID: #${styleId}
+            </div>
+            <div class="info-item">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              Delivery: 2-24 hours
+            </div>
+          
+        
+        </div>
       </div>
+    </div>
   `;
+
   chatState.styleId = styleId;
+  setPriceForC(window.countryCode);
+  // Render the PayPal button
+  if (window.countryCode === 'IN') {
+    document.getElementById('paypal-button-container').style.opacity = '0.5';
+    document.getElementById('paypal-button-container').style.pointerEvents = 'none';
+    document.getElementById('razorpay-button-container').style.display = 'block';
+    loadRazorpayScript();
+    loadPayPalScript(currencyCode, function() {
+      
+      renderPayPalButton();
+
+    });
+  } else {
+    document.getElementById('razorpay-button-container').style.display = 'block';
+    
+    loadPayPalScript(currencyCode, function() {
+      document.getElementById('razorpay-button-container').style.opacity = '0.5';
+      document.getElementById('razorpay-button-container').style.pointerEvents = 'none';
+      renderPayPalButton();
+
+
+    });
+    loadRazorpayScript();
+    
+  }
+
+  
+
 }
 
+function loadRazorpayScript() {
+  const script = document.createElement('script');
+  script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+  script.async = true;
+  script.onload = function() {
+    initializeRazorpay();
+  };
+  document.body.appendChild(script);
+}
+
+function initializeRazorpay() {
+  document.getElementById('rzp-button').onclick = function(e) {
+    const options = {
+      key: 'rzp_test_LL7ARuVVpKj2iC', // Replace with your actual Razorpay key
+      amount: 149900, // Amount in paise
+      currency: 'INR',
+      name: 'Vybex',
+      description: 'Personalized Style Guide',
+      handler: function(response) {
+        handleSuccessfulPayment('Razorpay', response);
+      },
+      prefill: {
+        name: 'Customer Name',
+        email: 'customer@example.com'
+      },
+      theme: {
+        color: '#3399cc'
+      }
+    };
+    const rzp = new Razorpay(options);
+    rzp.open();
+    e.preventDefault();
+  }
+}
+
+
+
+// Example: Load the script for USD or EUR
+
 function renderPayPalButton() {
-  console.log('Rendering PayPal button with:', currencyCode, price2);
+  
+  setPriceForC(window.countryCode);
+  // loadPayPalScript(currencyCode);
+  
   paypal.Buttons({
+    
     createOrder: function(data, actions) {
       return actions.order.create({
+        intent:'CAPTURE',
         purchase_units: [{
           amount: {
             currency_code: currencyCode,
             value: price2.toString()
           }
-        }]
+        }],
+        application_context:{
+          shipping_preference:'NO_SHIPPING',
+          user_action:'PAY_NOW',
+        },
+        
       });
     },
     onApprove: function(data, actions) {
@@ -867,10 +1152,7 @@ function handleSuccessfulPayment(method, details) {
     images: chatState.images,
     timestamp: new Date().toISOString(),
     styleId: chatState.styleId,
-    paymentStatus: 'completed',
-    paymentMethod: method,
-    transactionId: details.id,
-    amount: `${currencyCode} ${window.price2}`
+    paymentStatus: `completed Method:${method} Transaction id:${details.id} Amount:${currencyCode} ${price2}`
   });
   showCompletionMessage();
 }
@@ -912,14 +1194,14 @@ function showCompletionMessage() {
               <h3>Thank You for Choosing Your Personal Style Journey! 🌟</h3>
               
               <div class="completion-details">
-                  <p>Dear ${chatState.answers[11]?.split(' from ')[0] || 'Style Explorer'},</p>
+                  <p>Dear ${chatState.answers[12]?.split(' from ')[0] || 'Style Explorer'},</p>
                   
                   <p>We're absolutely thrilled to begin this exciting style transformation with you! Your trust in us means the world, and we can't wait to create a personalized style guide that will help you shine even brighter. 💫</p>
                   
                   <p>What happens next:</p>
                   <ul>
                       <li>🎨 Our style experts are reviewing your preferences</li>
-                      <li>📧 Watch your email (${chatState.answers[12]}) for updates</li>
+                      <li>📧 Watch your email (${chatState.answers[13]}) for updates</li>
                       <li>⏱️ Your guide will be ready in 2-24 hours</li>
                   </ul>
                   
@@ -978,30 +1260,30 @@ async function submitToGoogleSheets(data) {
   };
 
   // Process images
-  // Process images
   if (data.images) {
     for (let index in data.images) {
       const imageInfo = data.images[index];
       const imageBlob = await getFromIndexedDB(parseInt(index));
       if (imageBlob) {
+        const base64 = await blobToBase64(imageBlob);
         formData.images[index] = {
           name: imageInfo.name,
           type: imageInfo.type,
           size: imageInfo.size,
-          base64: await blobToBase64(imageBlob)
+          base64: base64
         };
       }
     }
   }
 
   try {
-    const response = await fetch('https://script.google.com/macros/s/AKfycbx5YEUjsFtFCPXvyozDv36VWFdgFW_iO6kzdk_BPrL0G0yeBs81vZbdEIYKrOEBJKu3rQ/exec', {
+    const response = await fetch('https://script.google.com/macros/s/AKfycby_neN0G4hy8DtXZn_oiHBjd-hmHaZm99FsPLPXhicdDuPdMyipf_rAJuJKwbZXJJAP/exec', {
       method: 'POST',
       body: JSON.stringify(formData),
       headers: {
         'Content-Type': 'application/json'
       },
-      mode: 'no-cors'  // This is important for cross-origin requests to Apps Script
+      mode: 'no-cors'
     });
 
     console.log('Submission successful');
@@ -1010,14 +1292,4 @@ async function submitToGoogleSheets(data) {
     console.error('Error submitting to Google Sheets:', error);
     alert('There was an error submitting your form. Please try again.');
   }
-}
-
-// Utility function to convert Blob to Base64
-function blobToBase64(blob) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onloadend = () => resolve(reader.result.split(',')[1]);
-    reader.onerror = reject;
-    reader.readAsDataURL(blob);
-  });
 }
