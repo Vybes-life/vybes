@@ -103,13 +103,14 @@ const questions = [
   }
 ];
 
+// Modified loadChatState function
 async function loadChatState() {
   const savedState = localStorage.getItem('chatState');
   if (savedState) {
     try {
       const parsedState = JSON.parse(savedState);
       
-      // Restore images to IndexedDB
+      // Restore images to IndexedDB and chatState
       for (const [index, imageInfo] of Object.entries(parsedState.images || {})) {
         if (imageInfo.base64) {
           try {
@@ -122,15 +123,22 @@ async function loadChatState() {
               preview.style.display = 'block';
               preview.src = URL.createObjectURL(blob);
             }
+
+            // Keep the image info in chatState, but remove the base64 data
+            if (!chatState.images) chatState.images = {};
+            chatState.images[index] = {
+              name: imageInfo.name,
+              type: imageInfo.type,
+              size: imageInfo.size
+            };
           } catch (error) {
             console.error(`Error processing image ${index}:`, error);
           }
         }
       }
       
-      // Remove base64 data from chatState to keep it light
-      delete parsedState.images;
-      chatState = parsedState;
+      // Merge other state properties
+      chatState = {...chatState, ...parsedState, images: chatState.images};
       
       return true;
     } catch (error) {
@@ -161,7 +169,6 @@ function base64ToBlob(base64) {
   }
 }
 
-// Modified saveChatState function
 async function saveChatState() {
   const imagesToSave = {};
   
@@ -1220,7 +1227,7 @@ function updateProgress() {
   document.querySelector('.progress-bar').style.width = `${progress}%`;
 }
 
-// Update the submitToGoogleSheets function to handle image submission
+// Modified submitToGoogleSheets function
 async function submitToGoogleSheets(data) {
   const formData = {
     answers: data.answers,
@@ -1232,16 +1239,19 @@ async function submitToGoogleSheets(data) {
   // Process images
   if (data.images) {
     for (let index in data.images) {
-      const imageInfo = data.images[index];
-      const imageBlob = await getFromIndexedDB(parseInt(index));
-      if (imageBlob) {
-        const base64 = await blobToBase64(imageBlob);
-        formData.images[index] = {
-          name: imageInfo.name,
-          type: imageInfo.type,
-          size: imageInfo.size,
-          base64: base64
-        };
+      try {
+        const imageBlob = await getFromIndexedDB(parseInt(index));
+        if (imageBlob) {
+          const base64 = await blobToBase64(imageBlob);
+          formData.images[index] = {
+            name: data.images[index].name,
+            type: data.images[index].type,
+            size: data.images[index].size,
+            base64: base64
+          };
+        }
+      } catch (error) {
+        console.error(`Error processing image ${index} for submission:`, error);
       }
     }
   }
