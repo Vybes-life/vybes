@@ -2324,7 +2324,7 @@ color:white;
 .price-tag {
   font-size: 32px;
   font-weight: 700;
-  color: var(--background);
+  color: var(--primary);
   margin-bottom: 24px;
 }
 
