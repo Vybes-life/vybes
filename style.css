@@ -1892,12 +1892,40 @@ color:white;
 }
 
 .form-header {
-  padding: 1.25rem; /* 20px in rem */
+  padding: 0.8rem 1.25rem 1.25rem 1.25rem; /* 20px in rem */
   border-bottom: 1px solid #eee;
   display: flex;
   align-items: center;
   position: relative;
   justify-content: space-between;
+  
+  
+}
+
+.text-form-top{
+   /* 20px in rem */
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+}
+
+.form-header h3 {
+  margin-bottom: 0.5rem;
+  text-align: left;
+}
+
+.instructions-container {
+  height: 1.5em;
+  overflow: hidden;
+  text-align: left;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.instructions {
+  transition: transform 0.5s ease-out;
 }
 
 .input-container {
@@ -1920,6 +1948,9 @@ color:white;
 }
 
 .close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
   background: none;
   border: none;
   font-size: 1.5rem; /* 24px in rem */
@@ -2241,6 +2272,62 @@ color:white;
   }
 }
 
+#rzp-button {
+  width: 100%;
+  padding: 12px 16px;
+  background-color: #4F46E5;
+  color: white;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#rzp-button:hover {
+  background-color: #4338CA;
+  transform: scale(1.05);
+}
+#rzp-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.5);
+}
+#rzp-button svg {
+  width: 24px;
+  height: 24px;
+  margin-right: 8px;
+}
+
+.info-text {
+  font-size: 14px;
+  color: #4B5563;
+  margin-top: 24px;
+}
+.info-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.info-item svg {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+}
+
+.payment-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+.price-tag {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--background);
+  margin-bottom: 24px;
+}
+
 @media (max-width: 768px) {
 #formContainer {
 width: 85%;
@@ -2251,7 +2338,14 @@ max-height: 37.5rem; /* 600px */
 .form-header {
 padding: 0.75rem;
 }
-
+	
+.instructions-container {
+  height: 1.5em;
+  overflow: hidden;
+  text-align: left;
+  font-size: calc(32*var(--ratio));
+  color: #666;
+}
 .chat-container {
 padding: 0.75rem;
 }
@@ -2299,7 +2393,14 @@ border-radius: calc(24*var(--ratio));
 .form-header {
 padding: 0.625rem;
 }
-
+	
+.instructions-container {
+  height: 1.5em;
+  overflow: hidden;
+  text-align: left;
+  font-size: calc(40*var(--ratio));
+  color: #666;
+}
 .chat-container {
 padding: 0.625rem;
 }
