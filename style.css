@@ -2435,4 +2435,9 @@ width: 100%;
 text-align: center;
 margin-bottom: 0.5rem;
 }
+.close-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 1rem;}
+}	
 } 
