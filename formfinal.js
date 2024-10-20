@@ -1116,56 +1116,58 @@ function generateInvoice(paymentMethod, details,c) {
       downloadButton.onclick = function() {
         const invoiceElement = previewContainer.querySelector('.invoice');
         
-        // Function to generate and download image
-        const generateAndDownloadImage = () => {
-          html2canvas(invoiceElement, {
-            scale: 2,
-            useCORS: true,
-            logging: true,
-            allowTaint: true,
-            scrollY: -window.scrollY
-          }).then(canvas => {
-            // Convert canvas to blob
-            canvas.toBlob(function(blob) {
-              // Create a download link
-              const url = URL.createObjectURL(blob);
-              const downloadLink = document.createElement('a');
-              downloadLink.href = url;
-              downloadLink.download = `Vybex_Invoice_${invoiceNumber}.png`;
-              
-              // Append to body, click, and remove
-              document.body.appendChild(downloadLink);
-              downloadLink.click();
-              document.body.removeChild(downloadLink);
-              
-              // Free up memory
-              URL.revokeObjectURL(url);
-            }, 'image/png');
-          });
-        };
+        downloadButton.onclick = function() {
+    const invoiceElement = previewContainer.querySelector('.invoice');
+    
+    // Function to generate and download image
+    const generateAndDownloadImage = () => {
+      html2canvas(invoiceElement, {
+        scale: 2,
+        useCORS: true,
+        logging: true,
+        allowTaint: true,
+        scrollY: -window.scrollY
+      }).then(canvas => {
+        // Convert canvas to blob
+        canvas.toBlob(blob => {
+          // Create a FileReader
+          const reader = new FileReader();
+          reader.onloadend = function() {
+            // Create a temporary anchor element
+            const link = document.createElement('a');
+            link.href = reader.result;
+            link.download = `Vybex_Invoice_${invoiceNumber}.png`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          }
+          reader.readAsDataURL(blob);
+        }, 'image/png');
+      });
+    };
 
-        // Ensure all images are loaded before generating image
-        const images = invoiceElement.getElementsByTagName('img');
-        if (images.length > 0) {
-          let loadedImages = 0;
-          const onImageLoad = () => {
-            loadedImages++;
-            if (loadedImages === images.length) {
-              generateAndDownloadImage();
-            }
-          };
-          Array.from(images).forEach(img => {
-            if (img.complete) {
-              onImageLoad();
-            } else {
-              img.addEventListener('load', onImageLoad);
-              img.addEventListener('error', onImageLoad);
-            }
-          });
-        } else {
+    // Ensure all images are loaded before generating image
+    const images = invoiceElement.getElementsByTagName('img');
+    if (images.length > 0) {
+      let loadedImages = 0;
+      const onImageLoad = () => {
+        loadedImages++;
+        if (loadedImages === images.length) {
           generateAndDownloadImage();
         }
       };
+      Array.from(images).forEach(img => {
+        if (img.complete) {
+          onImageLoad();
+        } else {
+          img.addEventListener('load', onImageLoad);
+          img.addEventListener('error', onImageLoad);
+        }
+      });
+    } else {
+      generateAndDownloadImage();
+    }
+  };
 
       const containerToUse = c === 'paymentContainer' 
         ? document.querySelector('.payment-container')
