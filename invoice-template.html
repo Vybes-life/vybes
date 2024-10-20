@@ -31,16 +31,22 @@
             font-family: 'Cinzel Decorative', cursive;
             color: #3a7bd5;
             margin: 0;
-            font-size: 2.5em;
+            font-size: 2.5rem;
         }
         .invoice-details {
             display: flex;
             justify-content: space-between;
             margin-bottom: 20px;
             color: black;
+            flex-wrap: wrap;
         }
         .invoice-details div {
             flex: 1;
+            min-width: 200px;
+        }
+        /* Span styling */
+        span {
+            font-size: 1rem; /* Default span font size */
         }
         table {
             width: 100%;
@@ -58,18 +64,66 @@
         }
         .total {
             font-weight: bold;
-            font-size: 1.2em;
+            font-size: 1.2rem;
             text-align: right;
         }
         .footer {
             text-align: center;
             margin-top: 20px;
-            font-size: 0.9em;
+            font-size: 0.9rem;
             color: #777;
         }
         .icon {
             margin-right: 10px;
             color: #3a7bd5;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            .invoice {
+                padding: 15px;
+            }
+            .invoice-header h1 {
+                font-size: 2rem;
+            }
+            th, td {
+                padding: 8px;
+                font-size: 0.9rem;
+            }
+            .total {
+                font-size: 1.1rem;
+            }
+            span {
+                font-size: 0.875rem; /* Adjusting span font-size on medium screens */
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .invoice-header h1 {
+                font-size: 1.5rem;
+            }
+            .invoice-details {
+                display: block;
+            }
+            .invoice-details div {
+                margin-bottom: 10px;
+            }
+            th, td {
+                padding: 6px;
+                font-size: 0.8rem;
+            }
+            .total {
+                font-size: 1rem;
+            }
+            .footer {
+                font-size: 0.8rem;
+            }
+            span {
+                font-size: 0.75rem; /* Smaller span font-size for small screens */
+            }
         }
     </style>
 </head>
@@ -83,7 +137,7 @@
             <div>
                 <p><strong><i class="fas fa-user icon"></i>Invoice to:</strong><br>
                 {{customerName}}<br>
-                <span style="font-size:0.875em;">{{customerEmail}}</span></p>
+                <span>{{customerEmail}}</span></p>
             </div>
             <div>
                 <p><strong><i class="fas fa-info-circle icon"></i>Invoice Details:</strong><br>
