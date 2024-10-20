@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vybex Invoice</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Philosopher&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Philosopher', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .invoice {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .invoice-header {
+            text-align: center;
+            margin-bottom: 20px;
+            color:black;
+        }
+        .invoice-header h1 {
+            font-family: 'Cinzel Decorative', cursive;
+            color: #3a7bd5;
+            margin: 0;
+            font-size: 2.5em;
+        }
+        .invoice-details {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            color: black;
+        }
+        .invoice-details div {
+            flex: 1;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #3a7bd5;
+            color: white;
+        }
+        .total {
+            font-weight: bold;
+            font-size: 1.2em;
+            text-align: right;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #777;
+        }
+        .icon {
+            margin-right: 10px;
+            color: #3a7bd5;
+        }
+    </style>
+</head>
+<body>
+    <div class="invoice">
+        <div class="invoice-header">
+            <h1>Vybex</h1>
+            <p><i class="fas fa-file-invoice icon"></i>Invoice</p>
+        </div>
+        <div class="invoice-details">
+            <div>
+                <p><strong><i class="fas fa-user icon"></i>Invoice to:</strong><br>
+                {{customerName}}<br>
+                <span style="font-size:0.875em;">{{customerEmail}}</span></p>
+            </div>
+            <div>
+                <p><strong><i class="fas fa-info-circle icon"></i>Invoice Details:</strong><br>
+                <i class="fas fa-hashtag icon"></i>Invoice Number: {{invoiceNumber}}<br>
+                <i class="fas fa-calendar-alt icon"></i>Date: {{date}}<br>
+                <i class="fas fa-id-card icon"></i>Style ID: {{styleId}}<br>
+                <i class="fas fa-fingerprint icon"></i>Transaction ID: {{transactionId}}</p>
+            </div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th><i class="fas fa-shopping-cart icon"></i>Description</th>
+                    <th><i class="fas fa-money-bill-wave icon"></i>Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Personalized Style Guide</td>
+                    <td>{{currency}} {{amount}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="total"><i class="fas fa-calculator icon"></i>Total: {{currency}} {{amount}}</p>
+        <div class="footer">
+            <p><i class="fas fa-heart icon"></i>Thank you for your purchase!<br>
+            <i class="fas fa-envelope icon"></i>For any inquiries, please contact us at support@vybex.life</p>
+        </div>
+    </div>
+</body>
+</html>
