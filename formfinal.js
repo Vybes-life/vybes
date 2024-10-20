@@ -97,7 +97,7 @@ const questions = [
     placeholder: "e.g., Sarah from Canada"
   },
   {
-    text: "Last thing, I promise! Where can I send your fabulous style recommendations?",
+    text: "Last thing, I promise! Where can I send your fabulous style report/guide?",
     input: "email",
     placeholder: "your.fabulous.email@example.com"
   }
@@ -844,77 +844,7 @@ async function handleFileUpload(event, index) {
 let currencyCode = 'USD';
 let price2= 49.99; 
 
-const styles = `
-<style>
-  .payment-container {
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 24px;
-    margin-top: 16px;
-  }
-  .payment-title {
-    font-size: 20px;
-    font-weight: 600;
-    margin-bottom: 16px;
-  }
-  .price-tag {
-    font-size: 32px;
-    font-weight: 700;
-    color: #4F46E5;
-    margin-bottom: 24px;
-  }
-  #rzp-button {
-    width: 100%;
-    padding: 12px 16px;
-    background-color: #4F46E5;
-    color: white;
-    font-weight: 700;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  #rzp-button:hover {
-    background-color: #4338CA;
-    transform: scale(1.05);
-  }
-  #rzp-button:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.5);
-  }
-  #rzp-button svg {
-    width: 24px;
-    height: 24px;
-    margin-right: 8px;
-  }
-  .info-text {
-    font-size: 14px;
-    color: #4B5563;
-    margin-top: 24px;
-  }
-  .info-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 8px;
-  }
-  .info-item svg {
-    width: 20px;
-    height: 20px;
-    margin-right: 8px;
-  }
-  .animate__fadeIn {
-    animation: fadeIn 0.5s ease-in;
-  }
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-</style>
-`;
+
 
 function setPriceForC(countryCod) {
   
@@ -953,7 +883,7 @@ function setPriceForC(countryCod) {
     'TR': { price: 34.99, currency: 'USD' },
     'ZA': { price: 31.99, currency: 'USD' },
     'ID': { price: 28.99, currency: 'USD' },
-    'IN': { price: 1499, currency: 'INR' },
+    'IN': { price: 1499, currency: 'USD' },
     'PH': { price: 1399, currency: 'PHP' }
   };
 
@@ -1023,6 +953,7 @@ function showPaymentOptions() {
   `;
 
   chatState.styleId = styleId;
+
   setPriceForC(window.countryCode);
   // Render the PayPal button
   if (window.countryCode === 'IN') {
@@ -1049,7 +980,7 @@ function showPaymentOptions() {
     
   }
 
-  
+  chatContainer.scrollTop = chatContainer.scrollHeight;
 
 }
 
@@ -1072,11 +1003,13 @@ function initializeRazorpay() {
       name: 'Vybex',
       description: 'Personalized Style Guide',
       handler: function(response) {
+        generateInvoice('Razorpay', response,'paymentContainer');
         handleSuccessfulPayment('Razorpay', response);
+        
       },
       prefill: {
-        name: 'Customer Name',
-        email: 'customer@example.com'
+        name: chatState.answers[12]?.split(' from ')[0] || '',
+        email: chatState.answers[13] || 'customer@example.com'
       },
       theme: {
         color: '#3399cc'
@@ -1112,15 +1045,147 @@ function renderPayPalButton() {
           shipping_preference:'NO_SHIPPING',
           user_action:'PAY_NOW',
         },
+        payer: {
+          email_address: chatState.answers[13] || '',
+          name: {
+            given_name: chatState.answers[12]?.split(' from ')[0] || '',
+          }
+        }
         
       });
     },
     onApprove: function(data, actions) {
       return actions.order.capture().then(function(details) {
+        generateInvoice('PayPal', response,'paymentContainer');
         handleSuccessfulPayment('PayPal', details);
+        
       });
     }
   }).render('#paypal-button-container');
+}
+
+function generateInvoice(paymentMethod, details,c) {
+  const invoiceNumber = 'INV-' + Date.now();
+  const customerName = chatState.answers[12]?.split(' from ')[0] || 'Valued Customer';
+  const customerEmail = chatState.answers[13] || 'N/A';
+  const styleId= chatState.styleId;
+  console.log(styleId);
+  const amount = paymentMethod === 'PayPal' ? details.purchase_units[0].amount.value : 1499;
+  const currency = paymentMethod === 'PayPal' ? details.purchase_units[0].amount.currency_code : 'INR';
+  const transactionId = paymentMethod === 'PayPal' ? details.id : details.razorpay_payment_id;
+
+  fetch('invoice-template.html')
+    .then(response => response.text())
+    .then(template => {
+      // Replace placeholders with actual data
+      const invoice = template
+        .replace('{{customerName}}', customerName)
+        .replace('{{customerEmail}}', customerEmail)
+        .replace('{{invoiceNumber}}', invoiceNumber)
+        .replace('{{date}}', new Date().toLocaleDateString())
+        .replace('{{styleId}}', styleId || 'N/A')
+        .replace('{{transactionId}}', transactionId)
+        .replace(/{{currency}}/g, currency)
+        .replace(/{{amount}}/g, amount);
+
+      // Create a container for the invoice preview
+      const previewContainer = document.createElement('div');
+      previewContainer.innerHTML = invoice;
+      
+      // Create download button
+      const downloadButton = document.createElement('button');
+      downloadButton.textContent = 'Download Your Invoice (Image)';
+      downloadButton.className = 'btn btn-primary btn-lg btn-block mt-3';
+      downloadButton.style.display = 'block';
+      downloadButton.style.width = '100%';
+      downloadButton.style.padding = '15px';
+      downloadButton.style.fontSize = '18px';
+      downloadButton.style.fontWeight = 'bold';
+      downloadButton.style.backgroundColor = '#3a7bd5';
+      downloadButton.style.color = 'white';
+      downloadButton.style.border = 'none';
+      downloadButton.style.borderRadius = '5px';
+      downloadButton.style.cursor = 'pointer';
+      downloadButton.style.transition = 'background-color 0.3s';
+
+      downloadButton.onmouseover = function() {
+        this.style.backgroundColor = '#2c5aa0';
+      };
+      downloadButton.onmouseout = function() {
+        this.style.backgroundColor = '#3a7bd5';
+      };
+
+      downloadButton.onclick = function() {
+        const invoiceElement = previewContainer.querySelector('.invoice');
+        
+        // Function to generate and download image
+        const generateAndDownloadImage = () => {
+          html2canvas(invoiceElement, {
+            scale: 2,
+            useCORS: true,
+            logging: true,
+            allowTaint: true,
+            scrollY: -window.scrollY
+          }).then(canvas => {
+            // Convert canvas to blob
+            canvas.toBlob(function(blob) {
+              // Create a download link
+              const url = URL.createObjectURL(blob);
+              const downloadLink = document.createElement('a');
+              downloadLink.href = url;
+              downloadLink.download = `Vybex_Invoice_${invoiceNumber}.png`;
+              
+              // Append to body, click, and remove
+              document.body.appendChild(downloadLink);
+              downloadLink.click();
+              document.body.removeChild(downloadLink);
+              
+              // Free up memory
+              URL.revokeObjectURL(url);
+            }, 'image/png');
+          });
+        };
+
+        // Ensure all images are loaded before generating image
+        const images = invoiceElement.getElementsByTagName('img');
+        if (images.length > 0) {
+          let loadedImages = 0;
+          const onImageLoad = () => {
+            loadedImages++;
+            if (loadedImages === images.length) {
+              generateAndDownloadImage();
+            }
+          };
+          Array.from(images).forEach(img => {
+            if (img.complete) {
+              onImageLoad();
+            } else {
+              img.addEventListener('load', onImageLoad);
+              img.addEventListener('error', onImageLoad);
+            }
+          });
+        } else {
+          generateAndDownloadImage();
+        }
+      };
+
+      const containerToUse = c === 'paymentContainer' 
+        ? document.querySelector('.payment-container')
+        : document.querySelector('.completion-container');
+
+      containerToUse.appendChild(document.createElement('hr'));
+      containerToUse.appendChild(document.createElement('h3')).textContent = 'Your Invoice';
+      containerToUse.appendChild(previewContainer);
+      containerToUse.appendChild(downloadButton);
+
+      // Add a reminder message
+      const reminderMessage = document.createElement('p');
+      reminderMessage.innerHTML = '<i class="fas fa-exclamation-circle" style="color: #e74c3c;"></i> Please make sure to download your invoice for your records.';
+      reminderMessage.style.color = '#e74c3c';
+      reminderMessage.style.fontWeight = 'bold';
+      reminderMessage.style.marginTop = '10px';
+      containerToUse.appendChild(reminderMessage);
+    });
 }
 
 function handleSuccessfulPayment(method, details) {
@@ -1131,7 +1196,7 @@ function handleSuccessfulPayment(method, details) {
     styleId: chatState.styleId,
     paymentStatus: `completed Method:${method} Transaction id:${details.id} Amount:${currencyCode} ${price2}`
   });
-  showCompletionMessage();
+  showCompletionMessage(method,details);
 }
 
 
@@ -1161,8 +1226,9 @@ function processPayment() {
   }, 2000);
 }
 
-function showCompletionMessage() {
+function showCompletionMessage(me,de) {
   const chatContainer = document.getElementById('chatContainer');
+  
 
   chatContainer.innerHTML += `
       <div class="message assistant animate__animated animate__fadeIn">
@@ -1198,13 +1264,15 @@ function showCompletionMessage() {
                   
                   <p class="farewell">Here's to your style evolution! ✨</p>
                   <p class="signature">- Sarah, Your Personal Style Guide</p>
+                  <div class="completion-container"></div>
               </div>
           </div>
       </div>
   `;
-
+  generateInvoice(me,de,'');
   chatContainer.scrollTop = chatContainer.scrollHeight;
   clearChatState();
+  
 }
 
 function handlePayment(method) {
