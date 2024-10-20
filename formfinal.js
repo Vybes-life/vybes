@@ -1047,16 +1047,14 @@ function renderPayPalButton() {
         },
         payer: {
           email_address: chatState.answers[13] || '',
-          name: {
-            given_name: chatState.answers[12]?.split(' from ')[0] || '',
-          }
+          
         }
         
       });
     },
     onApprove: function(data, actions) {
       return actions.order.capture().then(function(details) {
-        generateInvoice('PayPal', response,'paymentContainer');
+        generateInvoice('PayPal',details,'paymentContainer');
         handleSuccessfulPayment('PayPal', details);
         
       });
