@@ -1,0 +1,31 @@
+# .github/workflows/build-and-deploy.yml
+name: Build and Deploy
+on:
+  push:
+    branches:
+      - main  # or your default branch
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Update formfinal.js with secrets
+        run: |
+          # Read the original file
+          content=$(cat formfinal.js)
+          
+          # Replace the keys with secrets
+          content=$(echo "$content" | sed "s/your-actual-paypal-client-id/${{ secrets.PAYPAL_CLIENT_ID }}/g")
+          content=$(echo "$content" | sed "s/your-actual-razorpay-key/${{ secrets.RAZORPAY_KEY }}/g")
+          
+          # Write back to file
+          echo "$content" > formfinal.js
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@4.1.5
+        with:
+          branch: gh-pages  # or whatever branch you're using for GitHub Pages
+          folder: .
