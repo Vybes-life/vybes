@@ -1004,11 +1004,12 @@ function initializeRazorpay() {
       description: 'Personalized Style Guide',
       handler: function(response) {
         generateInvoice('Razorpay', response,'paymentContainer');
+        sendStyleEmail(chatState);
         handleSuccessfulPayment('Razorpay', response);
         
       },
       prefill: {
-        name: chatState.answers[12]?.split(' from ')[0] || '',
+        name: nameExtractor.extractName(chatState.answers[12]) || '',
         email: chatState.answers[13] || 'customer@example.com'
       },
       theme: {
@@ -1047,7 +1048,9 @@ function renderPayPalButton() {
         },
         payer: {
           email_address: chatState.answers[13] || '',
-          
+          name: {
+            given_name: nameExtractor.extractName(chatState.answers[12]) || '',
+          }
         }
         
       });
@@ -1055,6 +1058,7 @@ function renderPayPalButton() {
     onApprove: function(data, actions) {
       return actions.order.capture().then(function(details) {
         generateInvoice('PayPal',details,'paymentContainer');
+        sendStyleEmail(chatState);
         handleSuccessfulPayment('PayPal', details);
         
       });
@@ -1062,9 +1066,42 @@ function renderPayPalButton() {
   }).render('#paypal-button-container');
 }
 
+async function sendStyleEmail(chatState) {
+  const customerName = nameExtractor.extractName(chatState.answers[12]);
+  const customerEmail = chatState.answers[13];
+  const styleId = chatState.styleId;
+  
+  const data = {
+    customerName,
+    customerEmail,
+    styleId
+  };
+
+  try {
+    const response = await fetch('https://script.google.com/macros/s/AKfycbxCYm6Hm7zbyFDnsGsxT5HjqzrHXU1usjwM2v09zNaRtN3FUt1w6qy9QPeOCWVvtvcO/exec', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      mode: 'no-cors',
+      body: JSON.stringify(data)
+    });
+
+    const result = await response.json();
+    if (!result.success) {
+      throw new Error(result.error || 'Failed to send email');
+    }
+    
+    return { success: true, message: 'Welcome email sent successfully!' };
+  } catch (error) {
+    console.error('Error sending welcome email:', error);
+    return { success: false, error: error.message };
+  }
+}
+
 function generateInvoice(paymentMethod, details,c) {
   const invoiceNumber = 'INV-' + Date.now();
-  const customerName = chatState.answers[12]?.split(' from ')[0] || 'Valued Customer';
+  const customerName = nameExtractor.extractName(chatState.answers[12]) || 'Valued Customer';
   const customerEmail = chatState.answers[13] || 'N/A';
   const styleId= chatState.styleId;
   console.log(styleId);
@@ -1191,7 +1228,7 @@ function handleSuccessfulPayment(method, details) {
     images: chatState.images,
     timestamp: new Date().toISOString(),
     styleId: chatState.styleId,
-    paymentStatus: `completed Method:${method} Transaction id:${details.id} Amount:${currencyCode} ${price2}`
+    paymentStatus: `completed Method:${method} Transaction id:${method === 'PayPal' ? details.id : details.razorpay_payment_id} Amount:${currencyCode} ${price2}`
   });
   showCompletionMessage(method,details);
 }
@@ -1234,7 +1271,7 @@ function showCompletionMessage(me,de) {
               <h3>Thank You for Choosing Your Personal Style Journey! 🌟</h3>
               
               <div class="completion-details">
-                  <p>Dear ${chatState.answers[12]?.split(' from ')[0] || 'Style Explorer'},</p>
+                  <p>Dear ${nameExtractor.extractName(chatState.answers[12]) || 'Style Explorer'},</p>
                   
                   <p>We're absolutely thrilled to begin this exciting style transformation with you! Your trust in us means the world, and we can't wait to create a personalized style guide that will help you shine even brighter. 💫</p>
                   
