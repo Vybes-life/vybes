@@ -883,7 +883,7 @@ function setPriceForC(countryCod) {
     'TR': { price: 34.99, currency: 'USD' },
     'ZA': { price: 31.99, currency: 'USD' },
     'ID': { price: 28.99, currency: 'USD' },
-    'IN': { price: 1499, currency: 'USD' },
+    'IN': { price: 1499, currency: 'INR' },
     'PH': { price: 1399, currency: 'PHP' }
   };
 
