@@ -103,6 +103,11 @@ const questions = [
   }
 ];
 
+const CONFIG = {
+    RAZORPAY_KEY: process.env.RAZORPAY_KEY || '',
+    PAYPAL_CLIENT_ID: process.env.PAYPAL_CLIENT_ID || ''
+};
+
 // Modified loadChatState function
 async function loadChatState() {
   const savedState = localStorage.getItem('chatState');
@@ -216,7 +221,7 @@ function clearChatState() {
 
 function loadPayPalScript(currency, callback) {
   var script = document.createElement('script');
-  script.src = `https://www.paypal.com/sdk/js?client-id=AULAbl8hVQCkgkcBIT2-pwqUMR1ZX_50Idda9ByF5MEsAFC3QOkm35g9qrY51Crv-ZGH0GTcix8q34Cn&currency=${currency}&components=buttons,card-fields&enable-funding=venmo`;
+  script.src = `https://www.paypal.com/sdk/js?client-id=${CONFIG.PAYPAL_CLIENT_ID}&currency=${currency}&components=buttons,card-fields&enable-funding=venmo`;
   script.onload = function () {
       if (typeof callback === 'function') {
           callback();
@@ -997,7 +1002,7 @@ function loadRazorpayScript() {
 function initializeRazorpay() {
   document.getElementById('rzp-button').onclick = function(e) {
     const options = {
-      key: 'rzp_test_LL7ARuVVpKj2iC', // Replace with your actual Razorpay key
+      key: CONFIG.RAZORPAY_KEY, // Replace with your actual Razorpay key
       amount: 149900, // Amount in paise
       currency: 'INR',
       name: 'Vybex',
