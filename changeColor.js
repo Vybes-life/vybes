@@ -124,9 +124,16 @@ function updateColors(input) {
 
   const inputLower = input.toLowerCase().trim();
   let foundColor = null;
-
+  const words = inputLower.split(/[,\s]+/);
+  const isOnlyColors = words.every(word => Object.keys(colorMap).includes(word));
+  
+  if (isOnlyColors && words.length > 0) {
+    // Use the first color in the list
+    foundColor = colorMap[words[0]];
+  }
   // Check if input is just a single color name
-  if (Object.keys(colorMap).includes(inputLower)) {
+  else{
+    if (Object.keys(colorMap).includes(inputLower)) {
     foundColor = colorMap[inputLower];
   } else {
     // Check for negative words first
@@ -185,6 +192,7 @@ function updateColors(input) {
       });
     }
   }
+}
 
   if (foundColor) {
     const r = parseInt(foundColor.slice(1, 3), 16);
