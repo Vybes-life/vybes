@@ -8,7 +8,7 @@ const instructions = [
     "More the detail in answer, better the report",
     "Scroll up to review or change previous answers.",
     "Double-check answers before final submission.",
-    "After transaction, wait till you get final message"
+    "After transaction, wait till you get final message",
     "Questions or issues? Contact support@vybex.life for assistance.",
 ];
 
