@@ -1270,7 +1270,7 @@ function showCompletionMessage(me,de) {
       <div class="message assistant animate__animated animate__fadeIn">
           <div class="message-content success-message">
               <div class="success-icon">✨</div>
-              <h3>Thank You for Choosing Your Personal Style Journey! 🌟</h3>
+              <h3>Thank You for Trusting Vybex with Your Style Transformation! 🌟</h3>
               
               <div class="completion-details">
                   <p>Dear ${nameExtractor.extractName(chatState.answers[12]) || 'Style Explorer'},</p>
@@ -1289,17 +1289,17 @@ function showCompletionMessage(me,de) {
                   <div class="social-share mt-4">
                       <p>While you wait, why not:</p>
                       <div class="share-buttons">
-                          <button onclick="shareOnSocial('pinterest')" class="share-btn pinterest">
-                              Share on Pinterest
-                          </button>
-                          <button onclick="shareOnSocial('instagram')" class="share-btn instagram">
+                          <a href="https://www.x.com"><button onclick="shareOnSocial('pinterest')" class="share-btn pinterest">
+                              Share on X.com
+                          </button></a>
+                          <a href="https://www.instagram.com"><button onclick="shareOnSocial('instagram')" class="share-btn instagram">
                               Share on Instagram
-                          </button>
+                          </button></a>
                       </div>
                   </div>
                   
                   <p class="farewell">Here's to your style evolution! ✨</p>
-                  <p class="signature">- Sarah, Your Personal Style Guide</p>
+                  <p class="signature">- Sarah, Your Personal Style Buddy <br> For any issue, Contact <a href="mailto:support@vybex.life">support@vybex.life</a></p>
                   <div class="completion-container"></div>
               </div>
           </div>
