@@ -1289,10 +1289,10 @@ function showCompletionMessage(me,de) {
                   <div class="social-share mt-4">
                       <p>While you wait, why not:</p>
                       <div class="share-buttons">
-                          <a href="https://www.x.com"><button onclick="shareOnSocial('pinterest')" class="share-btn pinterest">
+                          <a href="https://www.x.com" target="_blank"><button onclick="shareOnSocial('pinterest')" class="share-btn pinterest">
                               Share on X.com
                           </button></a>
-                          <a href="https://www.instagram.com"><button onclick="shareOnSocial('instagram')" class="share-btn instagram">
+                          <a href="https://www.instagram.com" target="_blank"><button onclick="shareOnSocial('instagram')" class="share-btn instagram">
                               Share on Instagram
                           </button></a>
                       </div>
