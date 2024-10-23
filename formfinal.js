@@ -665,7 +665,9 @@ function handleInputSubmit(event) {
       // Update the answer in the state
       chatState.answers[questionIndex] = answer;
       saveChatState();
-
+      if (questionIndex === 3) {
+        updateColors(answer);
+      }
       // Clear the input field
       inputField.value = '';
 
