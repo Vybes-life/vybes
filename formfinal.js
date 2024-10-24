@@ -1000,7 +1000,7 @@ function initializeRazorpay() {
   document.getElementById('rzp-button').onclick = function(e) {
     const options = {
       key: CONFIG.RAZORPAY_KEY, // Replace with your actual Razorpay key
-      amount: 1000, // Amount in paise
+      amount: 149900, // Amount in paise
       currency: 'INR',
       name: 'Vybex',
       description: 'Personalized Style Guide',
