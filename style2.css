@@ -727,23 +727,34 @@ color:white;
 .card .caption {
   height:35%;
   background-color: rgb(255, 255, 255);
-  padding: calc(0*var(--ratio)) calc(10*var(--ratio)) calc(0*var(--ratio)) calc(10*var(--ratio));
+  padding: calc(8*var(--ratio)); /* Unified padding */
   text-align:center;
   border-radius: 0 0 calc(24*var(--ratio)) calc(24*var(--ratio));
-  font-family: 'Philosopher';
-  
+  font-family: 'Philosopher', sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Distribute space between elements */
   
 }
 
 .card .caption h3 {
-  font-size: calc(16*var(--ratio));
+  font-size: calc(16*var(--ratio)); /* Slightly reduced font size */
   font-weight: bold;
-  margin-bottom: 0;
+  margin: 0; /* Remove margin */
+  line-height: 1.2; /* Add line height for better readability */
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Limit to 2 lines */
+  -webkit-box-orient: vertical;
 }
 .card .caption p {
-  font-size: calc(12*var(--ratio));
-  margin-bottom: calc(5*var(--ratio));
+  font-size: 12px;
+  margin: calc(8*var(--ratio)) 0; /* Add small margin top and bottom */
   color: #555;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Limit to 2 lines */
+  -webkit-box-orient: vertical;
 }
 
 .card .caption a {
@@ -753,6 +764,7 @@ color:white;
   text-decoration: underline;
   font-weight: bold;
   transition: color 0.3s ease;
+  margin-top: auto; /* Push link to bottom */
 }
 
 .card .caption a:hover {
@@ -1790,15 +1802,15 @@ color:white;
     height:80%;
   }
   .card .caption h3 {
-    font-size: calc(18*var(--ratio));
+    font-size: calc(24*var(--ratio));
 
   }
   .card .caption p {
-    font-size: calc(14*var(--ratio));
+    font-size: calc(18*var(--ratio));
 
   }
   .card .caption a {
-    font-size: calc(14*var(--ratio));
+    font-size: calc(18*var(--ratio));
 
   }
  .vertical-text{
