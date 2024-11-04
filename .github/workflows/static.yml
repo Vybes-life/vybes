@@ -24,9 +24,31 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          
       - name: Setup Pages
         uses: actions/configure-pages@v5
         
+      - name: Create Gemfile
+        run: |
+          echo 'source "https://rubygems.org"' > Gemfile
+          echo 'gem "jekyll", "~> 4.3.2"' >> Gemfile
+          echo 'gem "jekyll-seo-tag", "~> 2.8.0"' >> Gemfile
+          
+      - name: Create Jekyll Config
+        run: |
+          echo "title: Try On New Hairstyles, Makeup & Outfits On Yourself - Complete Style Makeover | VYBEX" > _config.yml
+          echo "description: See yourself in new hairstyles, makeup & outfits before buying! Our AI creates personalized style guides with virtual try-ons. Get expert advice on what suits your face shape, body type & skin tone. Transform your look for just $49!" >> _config.yml
+          echo "url: https://vybex.life" >> _config.yml
+          echo "plugins:" >> _config.yml
+          echo "  - jekyll-seo-tag" >> _config.yml
+          
+      - name: Install Dependencies
+        run: bundle install
+          
       - name: Create env file
         run: |
           echo "const CONFIG = {" > ./config.js
@@ -34,10 +56,13 @@ jobs:
           echo "  PAYPAL_CLIENT_ID: '${{ secrets.PAYPAL_CLIENT_ID }}'" >> ./config.js
           echo "};" >> ./config.js
           
+      - name: Build with Jekyll
+        run: bundle exec jekyll build
+          
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
+          path: '_site'
           
       - name: Deploy to GitHub Pages
         id: deployment
