@@ -856,7 +856,7 @@ const PaymentState = (function() {
     getPrice: () => _price2,
     getDiscount: () => _discount,
     setCurrency: (val) => { _currencyCode = val; },
-    setPrice: (val) => { _price2 = val.toFixed(2); },
+    setPrice: (val) => { _price2 = val; },
     setDiscount: (val) => { _discount = val; }
   };
 })();
@@ -1129,7 +1129,7 @@ function loadRazorpayScript() {
 
 function initializeRazorpay() {
   setPriceForC(window.countryCode,PaymentState.getDiscount());
-  const p = parseInt(PaymentState.getPrice())*100;
+  const p = Math.round(parseInt(PaymentState.getPrice()))*100;
   document.getElementById('rzp-button').onclick = function(e) {
     const options = {
       key: CONFIG.RAZORPAY_KEY, // Replace with your actual Razorpay key
@@ -1247,7 +1247,7 @@ function generateInvoice(paymentMethod, details,c) {
   const customerEmail = chatState.answers[13] || 'N/A';
   const styleId= chatState.styleId;
   console.log(styleId);
-  const amount = paymentMethod === 'PayPal' ? details.purchase_units[0].amount.value : PaymentState.getPrice();
+  const amount = paymentMethod === 'PayPal' ? details.purchase_units[0].amount.value : Math.round(PaymentState.getPrice());
   const currency = paymentMethod === 'PayPal' ? details.purchase_units[0].amount.currency_code : 'INR';
   const transactionId = paymentMethod === 'PayPal' ? details.id : details.razorpay_payment_id;
 
