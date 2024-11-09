@@ -844,11 +844,13 @@ async function handleFileUpload(event, index) {
 
 // Global variable to store the currency code
 let currencyCode = 'USD';
-let price2= 49.99; 
+let price2= 49; 
+let discount=0;
+let coup='';
 
 
 
-function setPriceForC(countryCod) {
+function setPriceForC(countryCod,discount) {
   
   let prices = {
     'AE': { price: 89.99, currency: 'USD' },
@@ -892,10 +894,10 @@ function setPriceForC(countryCod) {
   
   let priceObj = prices[countryCod] || { price: 49.99, currency: 'USD' };
 
+  const d = (priceObj.price * discount) / 100;
+  price2 = priceObj.price-d;
 
-  price2 = priceObj.price;
-  currencyCode = priceObj.currency;  
-  // Update the displayed price
+  currencyCode = priceObj.currency; 
 }
 
 
@@ -913,10 +915,29 @@ function showPaymentOptions() {
         <p>To receive your personalized style guide, please complete the payment:</p>
         
         <div class="payment-container p-4 bg-white rounded-lg shadow-md mt-4">
+
+          <div class="coupon-wrapper">
+            <div class="coupon-input-group">
+              <input 
+                type="text" 
+                id="couponInput" 
+                placeholder="Enter coupon code" 
+                maxlength="12"
+              />
+              <button id="applyCouponBtn">
+                <span id="btnText">Apply</span>
+                <div id="btnLoader" class="loader hidden"></div>
+              </button>
+            </div>
+            <div id="couponMessage" class="coupon-message hidden"></div>
+          </div>
         
           <div class="payment-container">
           <h4 class="payment-title">Payment Details</h4>
-          <div class="price-tag">${window.price}</div>
+          <div class="price-container">
+              <div class="price-tag ">${window.price}</div>
+              <div id="discounted-price" class="discounted-price  hidden"></div>
+          </div>
           
           <div id="paypal-button-container" style="margin-bottom: 16px;"></div>
           <div id="razorpay-button-container" style="display: none; margin-bottom: 16px;">
@@ -953,10 +974,61 @@ function showPaymentOptions() {
       </div>
     </div>
   `;
+  setPriceForC(window.countryCode,0);
+  document.getElementById('applyCouponBtn').addEventListener('click', async function() {
+    const couponCode = document.getElementById('couponInput').value.trim().toUpperCase();
+    if (!couponCode) {
+      showCouponMessage('Please enter a coupon code', 'error');
+      return;
+    }
+    
+    // Show loading state
+    const btnText = document.getElementById('btnText');
+    const btnLoader = document.getElementById('btnLoader');
+    const applyButton = document.getElementById('applyCouponBtn');
+    
+    btnText.textContent = 'Checking...';
+    btnLoader.classList.remove('hidden');
+    applyButton.disabled = true;
+    
+    // First, send to your approval endpoint
+    try {
+      const response = await fetch('https://script.google.com/macros/s/AKfycbyVykuM51MVtcx--XGgm4fuLan_PWWLlF2csGaHAJI-b3bBF3zLDl8QvehvozxtCVr5/exec', {
+        redirect:'follow',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'text/plain;charset=utf-8',
+        },
+        body: JSON.stringify({ couponCode })
+      });
+      const dataText = await response.text(); // Get HTML response as text
+      const data = JSON.parse(dataText); // Parse as JSON
+      console.log(data);
+      
+      if (data.success) {
+        coup=couponCode;
+        const trimmedCode= couponCode.slice(0,-2);
+        const discountMatch = trimmedCode.match(/\d+$/);
+        if (discountMatch) {
+          discount = parseInt(discountMatch[0]);
+          applyDiscount(discount);
+          showCouponMessage(`Success! ${discount}% discount applied`, 'success');
+          
+        }
+      } else {
+        showCouponMessage('Invalid coupon code', 'error');
+      }
+    } finally {
+      // Reset button state
+      btnText.textContent = 'Apply';
+      btnLoader.classList.add('hidden');
+      applyButton.disabled = false;
+    }
+  });
 
   chatState.styleId = styleId;
 
-  setPriceForC(window.countryCode);
+  
   // Render the PayPal button
   if (window.countryCode === 'IN') {
     document.getElementById('paypal-button-container').style.opacity = '0.5';
@@ -985,7 +1057,50 @@ function showPaymentOptions() {
   chatContainer.scrollTop = chatContainer.scrollHeight;
 
 }
+function applyDiscount(discountPercent) {
+  const match = price.match(/([^\d\s,]+)\s*([\d,]+)/);
+  const curr= match[1].trim();
+  const originalPriceStr = window.price.replace(/[^0-9.-]+/g, "");
+  const originalPrice = parseFloat(originalPriceStr);
+  const d = (originalPrice * discountPercent) / 100;
+  const discountedPrice = originalPrice - d;
+  
+  discount=discountPercent;
+  
+  const originalPriceElement = document.querySelector('.price-tag');
+  const discountedPriceElement = document.getElementById('discounted-price');
+  
+  originalPriceElement.classList.add('strikethrough');
+  discountedPriceElement.textContent = curr+discountedPrice;
+  discountedPriceElement.classList.remove('hidden');
+  
+  if (window.countryCode === 'IN') {
+    loadRazorpayScript();
+    
+  } else {
+    
+    
+    loadPayPalScript(currencyCode, function() {
+      
+      renderPayPalButton();
 
+
+    });
+    
+    
+  }
+
+  
+ 
+}
+
+
+
+function showCouponMessage(message, type) {
+  const messageElement = document.getElementById('couponMessage');
+  messageElement.textContent = message;
+  messageElement.className = `coupon-message ${type} animate__animated animate__fadeIn`;
+}
 function loadRazorpayScript() {
   const script = document.createElement('script');
   script.src = 'https://checkout.razorpay.com/v1/checkout.js';
@@ -997,10 +1112,12 @@ function loadRazorpayScript() {
 }
 
 function initializeRazorpay() {
+  setPriceForC(window.countryCode,discount);
+  const p = parseInt(price2)*100;
   document.getElementById('rzp-button').onclick = function(e) {
     const options = {
       key: CONFIG.RAZORPAY_KEY, // Replace with your actual Razorpay key
-      amount: 149900, // Amount in paise
+      amount: p, // Amount in paise
       currency: 'INR',
       name: 'Vybex',
       description: 'Personalized Style Guide',
@@ -1030,8 +1147,15 @@ function initializeRazorpay() {
 
 function renderPayPalButton() {
   
-  setPriceForC(window.countryCode);
+  setPriceForC(window.countryCode,discount);
   // loadPayPalScript(currencyCode);
+  let pri;
+  if(window.countryCode==='JP'){
+    pri=Math.round(price2).toString();
+  }
+  else{
+    pri=price2.toFixed(2).toString();
+  }
   
   paypal.Buttons({
     
@@ -1041,7 +1165,7 @@ function renderPayPalButton() {
         purchase_units: [{
           amount: {
             currency_code: currencyCode,
-            value: price2.toString()
+            value: pri
           }
         }],
         application_context:{
@@ -1337,7 +1461,8 @@ async function submitToGoogleSheets(data) {
     answers: data.answers,
     images: {},
     styleId: data.styleId,
-    paymentStatus: data.paymentStatus
+    paymentStatus: data.paymentStatus,
+    coupon:coup
   };
 
   // Process images
