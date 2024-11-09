@@ -1024,6 +1024,8 @@ function showPaymentOptions() {
         const trimmedCode= couponCode.slice(0,-2);
         const discountMatch = trimmedCode.match(/\d+$/);
         if (discountMatch) {
+
+          const discount = parseInt(discountMatch[0]);
           PaymentState.setDiscount(discount);
           applyDiscount(discount);
           showCouponMessage(`Success! ${discount}% discount applied`, 'success');
