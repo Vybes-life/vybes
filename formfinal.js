@@ -842,11 +842,24 @@ async function handleFileUpload(event, index) {
 }
 
 
-// Global variable to store the currency code
-let currencyCode = 'USD';
-let price2= 49; 
-let discount=0;
-let coup='';
+let coup = '';
+const PaymentState = (function() {
+  // Private variables inside the closure
+  let _currencyCode = 'USD';
+  let _price2 = 49;
+  let _discount = 0;
+  
+
+  // Return public methods to access these variables
+  return {
+    getCurrency: () => _currencyCode,
+    getPrice: () => _price2,
+    getDiscount: () => _discount,
+    setCurrency: (val) => { _currencyCode = val; },
+    setPrice: (val) => { _price2 = val; },
+    setDiscount: (val) => { _discount = val; }
+  };
+})();
 
 
 
@@ -895,9 +908,10 @@ function setPriceForC(countryCod,discount) {
   let priceObj = prices[countryCod] || { price: 49.99, currency: 'USD' };
 
   const d = (priceObj.price * discount) / 100;
-  price2 = priceObj.price-d;
-
-  currencyCode = priceObj.currency; 
+  PaymentState.setPrice(priceObj.price - d);
+  
+  // Instead of: currencyCode = priceObj.currency;
+  PaymentState.setCurrency(priceObj.currency); 
 }
 
 
@@ -1010,7 +1024,7 @@ function showPaymentOptions() {
         const trimmedCode= couponCode.slice(0,-2);
         const discountMatch = trimmedCode.match(/\d+$/);
         if (discountMatch) {
-          discount = parseInt(discountMatch[0]);
+          PaymentState.setDiscount(discount);
           applyDiscount(discount);
           showCouponMessage(`Success! ${discount}% discount applied`, 'success');
           
@@ -1035,7 +1049,7 @@ function showPaymentOptions() {
     document.getElementById('paypal-button-container').style.pointerEvents = 'none';
     document.getElementById('razorpay-button-container').style.display = 'block';
     loadRazorpayScript();
-    loadPayPalScript(currencyCode, function() {
+    loadPayPalScript(PaymentState.getCurrency(), function() {
       
       renderPayPalButton();
 
@@ -1043,7 +1057,7 @@ function showPaymentOptions() {
   } else {
     document.getElementById('razorpay-button-container').style.display = 'block';
     
-    loadPayPalScript(currencyCode, function() {
+    loadPayPalScript(PaymentState.getCurrency(), function() {
       document.getElementById('razorpay-button-container').style.opacity = '0.5';
       document.getElementById('razorpay-button-container').style.pointerEvents = 'none';
       renderPayPalButton();
@@ -1058,20 +1072,20 @@ function showPaymentOptions() {
 
 }
 function applyDiscount(discountPercent) {
-  const match = price.match(/([^\d\s,]+)\s*([\d,]+)/);
+  const match = window.price.match(/([^\d\s,]+)\s*([\d,]+)/);
   const curr= match[1].trim();
   const originalPriceStr = window.price.replace(/[^0-9.-]+/g, "");
   const originalPrice = parseFloat(originalPriceStr);
   const d = (originalPrice * discountPercent) / 100;
   const discountedPrice = originalPrice - d;
   
-  discount=discountPercent;
+  PaymentState.setDiscount(discountPercent);
   
   const originalPriceElement = document.querySelector('.price-tag');
   const discountedPriceElement = document.getElementById('discounted-price');
   
   originalPriceElement.classList.add('strikethrough');
-  discountedPriceElement.textContent = curr+discountedPrice.toFixed(2);
+  discountedPriceElement.textContent = curr+parseInt(discountedPrice).toFixed(2);
   discountedPriceElement.classList.remove('hidden');
   
   if (window.countryCode === 'IN') {
@@ -1080,7 +1094,7 @@ function applyDiscount(discountPercent) {
   } else {
     
     
-    loadPayPalScript(currencyCode, function() {
+    loadPayPalScript(PaymentState.getCurrency(), function() {
       
       renderPayPalButton();
 
@@ -1112,8 +1126,8 @@ function loadRazorpayScript() {
 }
 
 function initializeRazorpay() {
-  setPriceForC(window.countryCode,discount);
-  const p = parseInt(price2)*100;
+  setPriceForC(window.countryCode,PaymentState.getDiscount());
+  const p = parseInt(PaymentState.getPrice())*100;
   document.getElementById('rzp-button').onclick = function(e) {
     const options = {
       key: CONFIG.RAZORPAY_KEY, // Replace with your actual Razorpay key
@@ -1147,14 +1161,14 @@ function initializeRazorpay() {
 
 function renderPayPalButton() {
   
-  setPriceForC(window.countryCode,discount);
+  setPriceForC(window.countryCode,PaymentState.getDiscount());
   // loadPayPalScript(currencyCode);
   let pri;
   if(window.countryCode==='JP'){
-    pri=Math.round(price2).toString();
+    pri=Math.round(PaymentState.getPrice()).toString();
   }
   else{
-    pri=price2.toFixed(2).toString();
+    pri=PaymentState.getPrice().toFixed(2).toString();
   }
   
   paypal.Buttons({
@@ -1164,7 +1178,7 @@ function renderPayPalButton() {
         intent:'CAPTURE',
         purchase_units: [{
           amount: {
-            currency_code: currencyCode,
+            currency_code: PaymentState.getCurrency(),
             value: pri
           }
         }],
@@ -1231,7 +1245,7 @@ function generateInvoice(paymentMethod, details,c) {
   const customerEmail = chatState.answers[13] || 'N/A';
   const styleId= chatState.styleId;
   console.log(styleId);
-  const amount = paymentMethod === 'PayPal' ? details.purchase_units[0].amount.value : price2;
+  const amount = paymentMethod === 'PayPal' ? details.purchase_units[0].amount.value : PaymentState.getPrice();
   const currency = paymentMethod === 'PayPal' ? details.purchase_units[0].amount.currency_code : 'INR';
   const transactionId = paymentMethod === 'PayPal' ? details.id : details.razorpay_payment_id;
 
@@ -1354,7 +1368,7 @@ function handleSuccessfulPayment(method, details) {
     images: chatState.images,
     timestamp: new Date().toISOString(),
     styleId: chatState.styleId,
-    paymentStatus: `completed Method:${method} Transaction id:${method === 'PayPal' ? details.id : details.razorpay_payment_id} Amount:${currencyCode} ${price2}`
+    paymentStatus: `completed Method:${method} Transaction id:${method === 'PayPal' ? details.id : details.razorpay_payment_id} Amount:${PaymentState.getCurrency()} ${PaymentState.getPrice()}`
   });
   showCompletionMessage(method,details);
 }
