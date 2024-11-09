@@ -856,7 +856,7 @@ const PaymentState = (function() {
     getPrice: () => _price2,
     getDiscount: () => _discount,
     setCurrency: (val) => { _currencyCode = val; },
-    setPrice: (val) => { _price2 = val; },
+    setPrice: (val) => { _price2 = val.toFixed(2); },
     setDiscount: (val) => { _discount = val; }
   };
 })();
