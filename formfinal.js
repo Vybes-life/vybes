@@ -1071,7 +1071,7 @@ function applyDiscount(discountPercent) {
   const discountedPriceElement = document.getElementById('discounted-price');
   
   originalPriceElement.classList.add('strikethrough');
-  discountedPriceElement.textContent = curr+discountedPrice;
+  discountedPriceElement.textContent = curr+discountedPrice.toFixed(2);
   discountedPriceElement.classList.remove('hidden');
   
   if (window.countryCode === 'IN') {
@@ -1231,7 +1231,7 @@ function generateInvoice(paymentMethod, details,c) {
   const customerEmail = chatState.answers[13] || 'N/A';
   const styleId= chatState.styleId;
   console.log(styleId);
-  const amount = paymentMethod === 'PayPal' ? details.purchase_units[0].amount.value : 1499;
+  const amount = paymentMethod === 'PayPal' ? details.purchase_units[0].amount.value : price2;
   const currency = paymentMethod === 'PayPal' ? details.purchase_units[0].amount.currency_code : 'INR';
   const transactionId = paymentMethod === 'PayPal' ? details.id : details.razorpay_payment_id;
 
