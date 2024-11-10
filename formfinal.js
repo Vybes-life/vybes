@@ -875,7 +875,7 @@ function setPriceForC(countryCod,discount) {
     'KW': { price: 74.99, currency: 'USD' },
     'BH': { price: 68.99, currency: 'USD' },
     'SG': { price: 79.99, currency: 'SGD' },
-    'JP': { price: 11990, currency: 'JPY' },
+    'JP': { price: 7999, currency: 'JPY' },
     'KR': { price: 68.99, currency: 'USD' },
     'HK': { price: 588, currency: 'HKD' },
     'AU': { price: 99.95, currency: 'AUD' },
