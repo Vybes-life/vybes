@@ -1469,11 +1469,34 @@ color:white;
   font-weight: 900;
   position: absolute;
   top:5%;
-  left:2%;
+  left:5%;
   font-size: calc(47*var(--ratio));
   line-height: calc(56*var(--ratio));
   text-align: center;
   color: black;
+}
+
+.registernowbtn{
+  font-family: 'Cinzel Decorative', sans-serif;
+  height:calc(48*var(--ratio));
+  font-size: calc(20*var(--ratio));
+  font-weight: bold;
+  border-radius: calc(8*var(--ratio));
+  color:white;
+  background: linear-gradient(to right, #2E7D32, #66BB6A);
+
+
+  cursor: pointer;
+  animation:pulse 1s infinite ease-in-out alternate;
+  border:calc(3*var(--ratio)) solid black;
+}
+
+.registernowbtn:hover{
+  transform: translateY(calc(-10*var(--ratio))); /* Lift effect on hover */
+    box-shadow: 
+        0 6px 10px rgba(0, 0, 0, 0.15), 
+        
+        0 16px 30px rgba(0, 0, 0, 0.2);
 }
 
 .soon-txt{
