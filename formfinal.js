@@ -848,6 +848,7 @@ const PaymentState = (function() {
   let _currencyCode = 'USD';
   let _price2 = 49;
   let _discount = 0;
+  let _comission=0;
   
 
   // Return public methods to access these variables
@@ -855,9 +856,11 @@ const PaymentState = (function() {
     getCurrency: () => _currencyCode,
     getPrice: () => _price2,
     getDiscount: () => _discount,
+    getComission: () => _comission,
     setCurrency: (val) => { _currencyCode = val; },
     setPrice: (val) => { _price2 = val; },
-    setDiscount: (val) => { _discount = val; }
+    setDiscount: (val) => { _discount = val; },
+    setComission: (val) => { _comission = val; }
   };
 })();
 
@@ -905,13 +908,20 @@ function setPriceForC(countryCod,discount) {
   };
 
   
+  const c=30-discount;
+  
+  
   let priceObj = prices[countryCod] || { price: 49.99, currency: 'USD' };
 
-  const d = (priceObj.price * discount) / 100;
-  PaymentState.setPrice(priceObj.price - d);
+  const com= ((priceObj.price * c) / 100).toFixed(2);
+
+  const d = ((priceObj.price * discount) / 100).toFixed(2);
+  PaymentState.setPrice((priceObj.price - d));
   
   // Instead of: currencyCode = priceObj.currency;
   PaymentState.setCurrency(priceObj.currency); 
+
+  PaymentState.setComission(com);
 }
 
 
@@ -1140,6 +1150,7 @@ function initializeRazorpay() {
       handler: function(response) {
         generateInvoice('Razorpay', response,'paymentContainer');
         sendStyleEmail(chatState);
+        sendCouponTransaction(coup,PaymentState.getComission(),PaymentState.getCurrency());
         handleSuccessfulPayment('Razorpay', response);
         
       },
@@ -1201,6 +1212,7 @@ function renderPayPalButton() {
       return actions.order.capture().then(function(details) {
         generateInvoice('PayPal',details,'paymentContainer');
         sendStyleEmail(chatState);
+        sendCouponTransaction(coup,PaymentState.getComission(),PaymentState.getCurrency());
         handleSuccessfulPayment('PayPal', details);
         
       });
@@ -1238,6 +1250,30 @@ async function sendStyleEmail(chatState) {
   } catch (error) {
     console.error('Error sending welcome email:', error);
     return { success: false, error: error.message };
+  }
+}
+
+async function sendCouponTransaction(couponCode, price, currency) {
+  const deploymentUrl = 'https://script.google.com/macros/s/AKfycbzDBIT2IZeuJd5u4wIvL_o9cHWhEgsgMfuApGJIj4omZsseNkuvUiYwxFXUnbG7y-4O/exec';
+  
+  try {
+    const response = await fetch(deploymentUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      mode:"no-cors",
+      body: JSON.stringify({
+        couponCode,
+        price,
+        currency
+      })
+    });
+    
+    
+  } catch (error) {
+    console.error('Error sending transaction:', error);
+    throw error;
   }
 }
 
