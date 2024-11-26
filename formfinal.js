@@ -214,9 +214,12 @@ function clearChatState() {
   };
 }
 
+
+
+
 function loadPayPalScript(currency, callback) {
   var script = document.createElement('script');
-  script.src = `https://www.paypal.com/sdk/js?client-id=${CONFIG.PAYPAL_CLIENT_ID}&currency=${currency}&components=buttons,card-fields&enable-funding=venmo`;
+  script.src = `https://www.paypal.com/sdk/js?client-id=${CONFIG.PAYPAL_CLIENT_ID}&currency=${currency}&components=buttons,card-fields&enable-funding=venmo&vault=true&intent=subscription`;
   script.onload = function () {
       if (typeof callback === 'function') {
           callback();
@@ -869,43 +872,54 @@ const PaymentState = (function() {
 function setPriceForC(countryCod,discount) {
   
   let prices = {
-    'AE': { price: 89.99, currency: 'USD' },
-    'SA': { price: 79.99, currency: 'USD' },
-    'QA': { price: 89.99, currency: 'USD' },
-    'KW': { price: 74.99, currency: 'USD' },
-    'BH': { price: 68.99, currency: 'USD' },
-    'SG': { price: 79.99, currency: 'SGD' },
-    'JP': { price: 7999, currency: 'JPY' },
-    'KR': { price: 68.99, currency: 'USD' },
-    'HK': { price: 588, currency: 'HKD' },
-    'AU': { price: 99.95, currency: 'AUD' },
-    'NZ': { price: 99.95, currency: 'NZD' },
-    'CH': { price: 69.90, currency: 'CHF' },
-    'NO': { price: 729, currency: 'NOK' },
-    'DK': { price: 449, currency: 'DKK' },
-    'SE': { price: 679, currency: 'SEK' },
-    'GB': { price: 47.99, currency: 'GBP' },
-    'DE': { price: 54.99, currency: 'EUR' },
-    'FR': { price: 49.99, currency: 'EUR' },
-    'NL': { price: 49.99, currency: 'EUR' },
-    'US': { price: 49.99, currency: 'USD' },
-    'CA': { price: 69.99, currency: 'CAD' },
-    'IT': { price: 44.99, currency: 'EUR' },
-    'ES': { price: 39.99, currency: 'EUR' },
-    'TW': { price: 1399, currency: 'TWD' },
-    'IL': { price: 159, currency: 'ILS' },
-    'RU': { price: 3299, currency: 'RUB' },
-    'MY': { price: 179, currency: 'MYR' },
-    'CN': { price: 279, currency: 'CNY' },
-    'TH': { price: 1259, currency: 'THB' },
-    'BR': { price: 179, currency: 'BRL' },
-    'MX': { price: 599, currency: 'MXN' },
-    'TR': { price: 34.99, currency: 'USD' },
-    'ZA': { price: 31.99, currency: 'USD' },
-    'ID': { price: 28.99, currency: 'USD' },
-    'IN': { price: 1499, currency: 'INR' },
-    'PH': { price: 1399, currency: 'PHP' }
-  };
+    // Premium Markets (Fashion-forward, high purchasing power)
+    'US': { price: 19, currency: 'USD' }, // Base price
+    'GB': { price: 17, currency: 'GBP' }, // Strong fashion market
+    'FR': { price: 19, currency: 'EUR' }, // Fashion capital
+    'IT': { price: 19, currency: 'EUR' }, // Fashion capital
+    'JP': { price: 2899, currency: 'JPY' }, // Fashion-conscious market
+
+    // High-Income Markets
+    'AE': { price: 24, currency: 'USD' }, // Luxury market
+    'SA': { price: 24, currency: 'USD' }, // Growing fashion market
+    'SG': { price: 29, currency: 'SGD' }, // Luxury market
+    'HK': { price: 189, currency: 'HKD' }, // Fashion hub
+
+    // Developed Markets
+    'DE': { price: 19, currency: 'EUR' },
+    'AU': { price: 29, currency: 'AUD' },
+    'CA': { price: 24, currency: 'CAD' },
+    'NL': { price: 19, currency: 'EUR' },
+    'CH': { price: 22, currency: 'CHF' },
+
+    // Growing Fashion Markets
+    'KR': { price: 22, currency: 'USD' }, // Rising fashion influence
+    'CN': { price: 159, currency: 'CNY' }, // Large fashion market
+    'RU': { price: 1599, currency: 'RUB' },
+
+    // Emerging Markets (adjusted for purchasing power)
+    'BR': { price: 99, currency: 'BRL' },
+    'IN': { price: 1299, currency: 'INR' }, // Large potential market
+    'MX': { price: 379, currency: 'MXN' },
+    'TH': { price: 699, currency: 'THB' },
+    'MY': { price: 89, currency: 'MYR' },
+    'PH': { price: 999, currency: 'PHP' },
+    'ID': { price: 15, currency: 'USD' },
+
+    // Other Markets
+    'ES': { price: 17, currency: 'EUR' },
+    'NO': { price: 199, currency: 'NOK' },
+    'DK': { price: 149, currency: 'DKK' },
+    'SE': { price: 199, currency: 'SEK' },
+    'NZ': { price: 29, currency: 'NZD' },
+    'TW': { price: 599, currency: 'TWD' },
+    'IL': { price: 69, currency: 'ILS' },
+    'TR': { price: 15, currency: 'USD' },
+    'ZA': { price: 15, currency: 'USD' },
+    'QA': { price: 24, currency: 'USD' },
+    'KW': { price: 24, currency: 'USD' },
+    'BH': { price: 22, currency: 'USD' }
+};
 
   
   const c=30-discount;
@@ -936,8 +950,8 @@ function showPaymentOptions() {
     <div class="message assistant animate__animated animate__fadeIn">
       <div class="message-content">
         <h3>🎉 Amazing! Your style profile is complete!</h3>
-        <p>To receive your personalized style guide, please complete the payment:</p>
-        
+        <p> Subscribe to receive your personalized style guide every week, please complete the payment:</p>
+        <p><em>(Please allow 1 minute for the Payment system to initialize)</em></p>
         <div class="payment-container p-4 bg-white rounded-lg shadow-md mt-4">
 
           <div class="coupon-wrapper">
@@ -959,7 +973,7 @@ function showPaymentOptions() {
           <div class="payment-container">
           <h4 class="payment-title">Payment Details</h4>
           <div class="price-container">
-              <div class="price-tag ">${window.price}</div>
+              <div class="price-tag ">${window.price}/month</div>
               <div id="discounted-price" class="discounted-price  hidden"></div>
           </div>
           
@@ -984,15 +998,38 @@ function showPaymentOptions() {
               <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
               </svg>
-              Your Style ID: #${styleId}
+              Your Style ID: #${styleId} (Save for reference)
             </div>
             <div class="info-item">
               <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
-              Delivery: 2-24 hours
+              First guide arrives in 2-24 hours
             </div>
-          
+            <div class="info-item">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              Fresh style guides every week
+            </div>
+            <div class="info-item">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z M9 10l4 4m0-4l-4 4"></path>
+              </svg>
+              Cancel subscription anytime
+            </div>
+            <div class="info-item">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+              </svg>
+              Money-back guarantee
+            </div>
+            <div class="info-item">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              24/7 customer support 
+            </div>
         
         </div>
       </div>
@@ -1097,7 +1134,7 @@ function applyDiscount(discountPercent) {
   const discountedPriceElement = document.getElementById('discounted-price');
   
   originalPriceElement.classList.add('strikethrough');
-  discountedPriceElement.textContent = curr+parseInt(discountedPrice).toFixed(2);
+  discountedPriceElement.textContent = curr+parseInt(discountedPrice).toFixed(2)+'/month';
   discountedPriceElement.classList.remove('hidden');
   
   if (window.countryCode === 'IN') {
@@ -1138,87 +1175,151 @@ function loadRazorpayScript() {
 }
 
 function initializeRazorpay() {
-  setPriceForC(window.countryCode,PaymentState.getDiscount());
-  const p = Math.round(parseInt(PaymentState.getPrice()))*100;
-  document.getElementById('rzp-button').onclick = function(e) {
-    const options = {
-      key: CONFIG.RAZORPAY_KEY, // Replace with your actual Razorpay key
-      amount: p, // Amount in paise
-      currency: 'INR',
-      name: 'Vybex',
-      description: 'Personalized Style Guide',
-      handler: function(response) {
-        generateInvoice('Razorpay', response,'paymentContainer');
-        sendStyleEmail(chatState);
-        sendCouponTransaction(coup,PaymentState.getComission(),PaymentState.getCurrency());
-        handleSuccessfulPayment('Razorpay', response);
-        
-      },
-      prefill: {
-        name: nameExtractor.extractName(chatState.answers[12]) || '',
-        email: chatState.answers[13] || 'customer@example.com'
-      },
-      theme: {
-        color: '#3399cc'
+  setPriceForC(window.countryCode, PaymentState.getDiscount());
+  const p = Math.round(parseInt(PaymentState.getPrice())) * 100;
+
+  document.getElementById('rzp-button').onclick = async function(e) {
+      e.preventDefault();
+
+      try {
+          // First, create plan and subscription through backend
+          const response = await fetch('https://script.google.com/macros/s/AKfycbywF3_VSSw638mGL_aJxZlceQgOgu42PlpiFY9SbcxZmTA4Mwm8ERdePQbpycqxvFV6bg/exec', {
+              redirect: 'follow',
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'text/plain;charset=utf-8',
+              },
+              body: JSON.stringify({
+                  amount: p
+              })
+          });
+
+          const data = await response.json();
+          const subscriptionId = data.subscription_id;
+
+          // Configure Razorpay options for subscription
+          const options = {
+              key: CONFIG.RAZORPAY_KEY,
+              subscription_id: subscriptionId,
+              name: 'Vybex',
+              description: 'Monthly Personalized Style Guide',
+              handler: function(response) {
+                  // Verify the payment signature
+                  
+                          generateInvoice('Razorpay', response, 'paymentContainer');
+                          sendStyleEmail(chatState);
+                          sendCouponTransaction(coup, PaymentState.getComission(), PaymentState.getCurrency());
+                          handleSuccessfulPayment('Razorpay', response);
+                      
+                      
+              },
+              prefill: {
+                  name: nameExtractor.extractName(chatState.answers[12]) || '',
+                  email: chatState.answers[13] || 'customer@example.com'
+              },
+              theme: {
+                  color: '#3399cc'
+              },
+              modal: {
+                  ondismiss: function() {
+                      console.log('Checkout form closed');
+                  }
+              }
+          };
+
+          const rzp = new Razorpay(options);
+          rzp.open();
+
+      } catch (error) {
+          console.error('Error creating subscription:', error);
+          alert('Unable to initialize payment. Please try again.');
       }
-    };
-    const rzp = new Razorpay(options);
-    rzp.open();
-    e.preventDefault();
+  };
+}
+
+
+
+// Add a function to verify payment signature
+async function verifyPayment(paymentId, subscriptionId, signature) {
+  try {
+    // Note: In a production environment, this verification should be done on the server side
+    const message = paymentId + '|' + subscriptionId;
+    const generated_signature = CryptoJS.HmacSHA256(message, CONFIG.RAZORPAY_SECRET).toString();
+
+    return generated_signature === signature;
+  } catch (error) {
+    console.error('Error verifying payment:', error);
+    return false;
   }
 }
 
 
 
-// Example: Load the script for USD or EUR
 
-function renderPayPalButton() {
-  
-  setPriceForC(window.countryCode,PaymentState.getDiscount());
-  // loadPayPalScript(currencyCode);
-  let pri;
-  if(window.countryCode==='JP'){
-    pri=Math.round(PaymentState.getPrice()).toString();
-  }
-  else{
-    pri=PaymentState.getPrice().toFixed(2).toString();
-  }
-  
-  paypal.Buttons({
-    
-    createOrder: function(data, actions) {
-      return actions.order.create({
-        intent:'CAPTURE',
-        purchase_units: [{
-          amount: {
-            currency_code: PaymentState.getCurrency(),
-            value: pri
-          }
-        }],
-        application_context:{
-          shipping_preference:'NO_SHIPPING',
-          user_action:'PAY_NOW',
-        },
-        payer: {
-          email_address: chatState.answers[13] || '',
-          name: {
-            given_name: nameExtractor.extractName(chatState.answers[12]) || '',
-          }
-        }
-        
-      });
-    },
-    onApprove: function(data, actions) {
-      return actions.order.capture().then(function(details) {
-        generateInvoice('PayPal',details,'paymentContainer');
-        sendStyleEmail(chatState);
-        sendCouponTransaction(coup,PaymentState.getComission(),PaymentState.getCurrency());
-        handleSuccessfulPayment('PayPal', details);
-        
-      });
+
+async function renderPayPalButton() {
+  setPriceForC(window.countryCode, PaymentState.getDiscount());
+
+  try {
+    const price = PaymentState.getPrice();
+    const currency = PaymentState.getCurrency();
+
+    // Replace with your Google Apps Script deployment URL
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyPNHbQOFr14x5fp5S-t5in1S-i0ONhsGDSOfXF7A2z-nYecNDLCqDrxUm7vYuzD85gSg/exec';
+
+    const response = await fetch(SCRIPT_URL, {
+      redirect: 'follow',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'text/plain;charset=utf-8',
+      },
+      body: JSON.stringify({
+        price: price,
+        currency: currency
+      })
+    });
+
+    const data = await response.json();
+    const planId = data.planId;
+
+    if (!planId) {
+      throw new Error('Failed to get plan ID');
     }
-  }).render('#paypal-button-container');
+    
+    paypal.Buttons({
+      createSubscription: function(data, actions) {
+        return actions.subscription.create({
+          'plan_id': planId,
+          'application_context': {
+            'shipping_preference': 'NO_SHIPPING',
+            'user_action': 'SUBSCRIBE_NOW'
+          },
+          'subscriber': {
+            'name': {
+              'given_name': nameExtractor.extractName(chatState.answers[12]) || ''
+            },
+            'email_address': chatState.answers[13] || ''
+          }
+        });
+      },
+      onApprove: function(data, actions) {
+        console.log('Subscription successful! Subscription ID: ' + data.subscriptionID);
+        
+        generateInvoice('PayPal', data, 'paymentContainer');
+        sendStyleEmail(chatState);
+        sendCouponTransaction(coup, PaymentState.getComission(), PaymentState.getCurrency());
+        handleSuccessfulPayment('PayPal', data);
+      },
+      onError: function(err) {
+        console.error('Error:', err);
+      }
+    }).render('#paypal-button-container');
+
+  } catch (error) {
+    console.error('Error setting up subscription:', error);
+  }
 }
+
 
 async function sendStyleEmail(chatState) {
   const customerName = nameExtractor.extractName(chatState.answers[12]);
@@ -1254,6 +1355,11 @@ async function sendStyleEmail(chatState) {
 }
 
 async function sendCouponTransaction(couponCode, price, currency) {
+
+  if (!couponCode) {
+    console.log('Coupon code is not there');
+    return;
+  }
   const deploymentUrl = 'https://script.google.com/macros/s/AKfycbzDBIT2IZeuJd5u4wIvL_o9cHWhEgsgMfuApGJIj4omZsseNkuvUiYwxFXUnbG7y-4O/exec';
   
   try {
@@ -1283,9 +1389,9 @@ function generateInvoice(paymentMethod, details,c) {
   const customerEmail = chatState.answers[13] || 'N/A';
   const styleId= chatState.styleId;
   console.log(styleId);
-  const amount = paymentMethod === 'PayPal' ? details.purchase_units[0].amount.value : Math.round(PaymentState.getPrice());
-  const currency = paymentMethod === 'PayPal' ? details.purchase_units[0].amount.currency_code : 'INR';
-  const transactionId = paymentMethod === 'PayPal' ? details.id : details.razorpay_payment_id;
+  const amount = paymentMethod === 'PayPal' ? PaymentState.getPrice() : Math.round(PaymentState.getPrice());
+  const currency = paymentMethod === 'PayPal' ? PaymentState.getCurrency() : 'INR';
+  const transactionId = paymentMethod === 'PayPal' ? `${details.orderID}\n SubscriptionID-: ${details.subscriptionID}` : details.razorpay_payment_id;
 
   fetch('invoice-template.html')
     .then(response => response.text())
@@ -1406,7 +1512,7 @@ function handleSuccessfulPayment(method, details) {
     images: chatState.images,
     timestamp: new Date().toISOString(),
     styleId: chatState.styleId,
-    paymentStatus: `completed Method:${method} Transaction id:${method === 'PayPal' ? details.id : details.razorpay_payment_id} Amount:${PaymentState.getCurrency()} ${PaymentState.getPrice()}`
+    paymentStatus: `completed Method:${method} Transaction id:${method === 'PayPal' ? `OrderId-:${details.orderID}  SubscriptionID-: ${details.subscriptionID}` : details.razorpay_payment_id} Amount:${PaymentState.getCurrency()} ${PaymentState.getPrice()}`
   });
   showCompletionMessage(method,details);
 }
@@ -1457,7 +1563,8 @@ function showCompletionMessage(me,de) {
                   <ul>
                       <li>🎨 Our style experts are reviewing your preferences</li>
                       <li>📧 Watch your email (${chatState.answers[13]}) for updates</li>
-                      <li>⏱️ Your guide will be ready in 2-24 hours</li>
+                      <li>⏱️ Your First Style Guide will be ready in 2-24 hours</li>
+                      <li>📰 Recieve Every Week Fresh Style Guide with new Looks and Outfits </li>
                   </ul>
                   
                   <p>Remember: Style is a way to say who you are without having to speak. We're here to help you tell your unique story!</p>
