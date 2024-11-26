@@ -8,44 +8,53 @@
 
   function setPriceForCountry(code) {
     let prices = {
-      'AE': 'AED 329',
-      'SA': 'SAR 299',
-      'QA': 'QAR 325',
-      'KW': 'KWD 22.9',
-      'BH': 'BHD 25.9',
-      'SG': 'SGD 109',
-      'JP': '¥11,990',
-      'KR': '₩89,000',
-      'HK': 'HKD 588',
-      'AU': 'AUD 99.95',
-      'NZ': 'NZD 99.95',
-      'CH': 'CHF 69.90',
-      'NO': 'NOK 729',
-      'DK': 'DKK 449',
-      'SE': 'SEK 679',
-      'GB': '£47.99',
-      'DE': '€54.99',
-      'FR': '€49.99',
-      'NL': '€49.99',
-      'US': '$49.99',
-      'CA': 'CAD 69.99',
-      'IT': '€44.99',
-      'ES': '€39.99',
-      'TW': 'TWD 1,399',
-      'IL': 'ILS 159',
-      'RU': 'RUB 3,299',
-      'MY': 'MYR 179',
-      'CN': 'CNY ¥279',
-      'TH': 'THB 1,259',
-      'BR': 'BRL 179',
-      'MX': 'MXN 599',
-      'TR': 'TRY 1,099',
-      'ZA': 'ZAR 599',
-      'ID': 'IDR 459,000',
-      'IN': '₹1,499',
-      'PH': '₱1,399'
+      'US': '$19',
+      'GB': '£17',
+      'FR': '€19',
+      'IT': '€19',
+      'JP': '¥2,899',
+      
+      // High-Income Markets
+      'AE': 'AED 88',
+      'SA': 'SAR 90',
+      'SG': 'SGD 29',
+      'HK': 'HKD 189',
+      
+      // Developed Markets
+      'DE': '€19',
+      'AU': 'AUD 29',
+      'CA': 'CAD 24',
+      'NL': '€19',
+      'CH': 'CHF 22',
+      
+      // Growing Fashion Markets
+      'KR': 'KRW 30,799',
+      'CN': 'CNY 159',
+      'RU': 'RUB 1,599',
+      
+      // Emerging Markets
+      'BR': 'BRL 99',
+      'IN': '₹1,299',
+      'MX': 'MXN 379',
+      'TH': 'THB 699',
+      'MY': 'MYR 89',
+      'PH': '₱999',
+      'ID': 'IDR 239,000',
+      
+      // Other Markets
+      'ES': '€17',
+      'NO': 'NOK 199',
+      'DK': 'DKK 149',
+      'SE': 'SEK 199',
+      'NZ': 'NZD 29',
+      'TW': 'TWD 599',
+      'IL': 'ILS 69',
+      'TR': 'TRY 519',
+      'ZA': 'ZAR 272',
+      'QA': 'QAR 88',
+      'KW': 'KWD 7.5',
+      'BH': 'BHD 8.3'
     };
-
     window.price = prices[code] || '$49';  // Save the price in global variable
     
     document.querySelectorAll('#price').forEach(function (element) {
