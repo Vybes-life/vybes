@@ -1979,6 +1979,13 @@ color:white;
   margin-left: 8px;
   animation: spin 1s linear infinite;
 }
+
+.price-container{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+
 @keyframes spin {
   to {transform: rotate(360deg);}
 }
@@ -1996,6 +2003,8 @@ color:white;
 .price-container {
   
   margin: 15px 0;
+  display: flex;
+  flex-direction: column;
 }
 .price-tag.strikethrough {
   float: left;
@@ -2441,7 +2450,7 @@ color:white;
   font-size: 32px;
   font-weight: 700;
   color: var(--primary);
-  margin-bottom: 24px;
+  margin-bottom: 15px;
 }
 
 @media (max-width: 768px) {
