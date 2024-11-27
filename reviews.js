@@ -128,7 +128,7 @@ setInterval(() => {
         currentIndex = (currentIndex + 1) % reviews.length;
         showReview(currentIndex, 'right');
     }
-}, 10000);
+}, 30000);
 
 // Initialize the first review
 showReview(currentIndex, 'right');
