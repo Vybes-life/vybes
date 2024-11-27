@@ -54,7 +54,7 @@ document.querySelector('.pre').addEventListener('click', () => {
 // Auto-slide every 5 seconds
 setInterval(() => {
     moveSlide(1);
-}, 5000);
+}, 35000);
 
 // Variable to prevent button spam (debouncing)
 let transitioning = false;
