@@ -202,16 +202,21 @@ body.page-load-transition {
   overflow: visible;
 }
 
+
 #animated-paragraph {
-  font-family: 'Philosopher';
-  font-weight: 700;
-  font-style: italic;
+  font-family: 'Philosopher', sans-serif;
+  font-weight:600;
+  
   text-align: center;
-  line-height: calc(28*var(--ratio));
+  font-size: calc(25*var(--ratio));
+  line-height: calc(36*var(--ratio));
   padding: 0 calc(30*var(--ratio));
+  transition: all 300ms ease-in-out;
+  
+  margin-right: calc(8*var(--ratio));
 }
 
-#animated-paragraph span {
+/* #animated-paragraph span {
   font-size: calc(20*var(--ratio));
   color: grey;
   font-weight: 700;
@@ -224,7 +229,7 @@ body.page-load-transition {
 #animated-paragraph span:last-child {
   margin-right: 0;
 }
-
+ */
 .before-after{
   border-radius: calc(24 * var(--ratio)) calc(24 * var(--ratio)) calc(24 * var(--ratio)) calc(24 * var(--ratio));
   overflow: visible;
