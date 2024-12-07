@@ -83,16 +83,16 @@ const thumbnailSets = [
 const topTexts = [
   "BREATHTAKING", "INSIGHTFUL", "FLATTERING", 
   "PERSONALIZED", "COMPREHENSIVE", "INNOVATIVE", "VERSATILE", 
-  "EXCEPTIONAL", "STUNNING", "CUSTOMIZED", "TRENDY",
-  "SEAMLESS", "CURATED", "CAPTIVATING", "ALL OF IT"
+  "EXCEPTIONAL", "STUNNING", "CUSTOMIZED", CURATED",
+  "SEAMLESS","CAPTIVATING", "COMPLEMENTARY", "ALL OF IT"
 ];
 
 const bottomTexts = [
   "COVER", "FACIAL ANALYSIS", "HAIRSTYLE RECOMMENDATIONS", 
   "MAKEUP GUIDE", "BODY ASSESSMENT", "AI TRY-ON", "OUTFIT INSPIRATIONS", 
   "SEASONAL TRENDS", "OCCASION-BASED LOOKS", "SHOPPING LIST",  
-  "PRODUCT RECOMMENDATIONS", "LOOK BOOK", "ACCESSORY SUGGESTIONS", 
-  "STYLE PROFILE", "AT JUST {price}/month"
+  "PRODUCT RECOMMENDATIONS", "LOOK BOOK","STYLE PROFILE", "ACCESSORY SUGGESTIONS", 
+  , "AT JUST {price}/month"
 ];
 
 const bottomTextColors = [
@@ -167,15 +167,23 @@ function updateTopText(index) {
   
   topTextContainer.style.fontSize = getFontSize(topText);
   topTextContainer.innerHTML = '';
-  
+
+  // Split by characters, preserving spaces
   topText.split('').forEach((letter, i) => {
       const span = document.createElement('span');
       span.classList.add('letter');
       span.style.animationDelay = `${i * 0.1}s`;
-      span.innerText = letter;
+
+      // Preserve spaces
+      if (letter === ' ') {
+          span.innerHTML = '&nbsp;'; // Use a non-breaking space for proper spacing
+      } else {
+          span.innerText = letter;
+      }
       topTextContainer.appendChild(span);
   });
 }
+
 
 function updateBottomText(index) {
   const bottomText = bottomTexts[index];
