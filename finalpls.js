@@ -83,7 +83,7 @@ const thumbnailSets = [
 const topTexts = [
   "BREATHTAKING", "INSIGHTFUL", "FLATTERING", 
   "PERSONALIZED", "COMPREHENSIVE", "INNOVATIVE", "VERSATILE", 
-  "EXCEPTIONAL", "STUNNING", "CUSTOMIZED", CURATED",
+  "EXCEPTIONAL", "STUNNING", "CUSTOMIZED", "CURATED",
   "SEAMLESS","CAPTIVATING", "COMPLEMENTARY", "ALL OF IT"
 ];
 
@@ -183,6 +183,8 @@ function updateTopText(index) {
       topTextContainer.appendChild(span);
   });
 }
+
+
 
 
 function updateBottomText(index) {
