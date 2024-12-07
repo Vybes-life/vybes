@@ -2,6 +2,8 @@ const slider = document.querySelector('.slider');
 const handle = document.querySelector('.handle');
 const whiteLine = document.querySelector('.white-line');
 const afterImage = document.querySelector('.after');
+let cu_width = document.body.clientWidth;
+let de_width = 1440;
 
 let isDragging = false;
 let autoSlideInterval;
@@ -71,7 +73,7 @@ function startAutoSlide() {
     }
     
     moveSlider(handlePosition);
-  }, 50*Math.sqrt(design_width/custom_width)); // Adjust the speed of movement
+  }, 50*Math.sqrt(de_width/cu_width)); // Adjust the speed of movement
 
   autoSlideActive = true;
 }
