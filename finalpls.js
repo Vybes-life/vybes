@@ -11,27 +11,22 @@ let r = c_width / d_width;
 
 const thumbnailSets = [
   [
-    "https://i.imgur.com/ydrbxhe.png", 
-    "https://i.imgur.com/yvV7asI.png",
-    "https://i.imgur.com/zZJapPg.png",
-    "https://i.imgur.com/zCEDa1o.png",
-    "https://i.imgur.com/cCiYkT2.png",
-    "https://i.imgur.com/lgxRHUu.png",
-    "https://i.imgur.com/i207nQF.png",
-    "https://i.imgur.com/UKedYob.png",
-    "https://i.imgur.com/0Eew4T1.png",
-    "https://i.imgur.com/5kbBlf4.png",
-    "https://i.imgur.com/EeMTzjp.png",
-    "https://i.imgur.com/WXGWCMf.png",
-    "https://i.imgur.com/N0l50aj.png",
-    "https://i.imgur.com/1QAD4iz.png", 
-    "https://i.imgur.com/2hNjuer.png",
-    "https://i.imgur.com/IIYVgEc.png",
-    "https://i.imgur.com/tE8RvdY.png",
-    "https://i.imgur.com/0QHb8EJ.png",
-    "https://i.imgur.com/yCo4Yhl.png",
-    "https://i.imgur.com/HSjbd69.png",
-    "https://i.imgur.com/VafJ60Q.png"
+    "model/i1.webp",  
+    "model/i5.webp",  
+    "model/i6.webp",  
+    "model/i7.webp",  
+    "model/i8.webp",  
+    "model/i9.webp",  
+    "model/i10.webp",  
+    "model/i11.webp",  
+    "model/i12.webp",  
+    "model/i13.webp",  
+    "model/i14.webp",  
+    "model/i15.webp",  
+    "model/i16.webp",  
+    "model/i17.webp",  
+    "model/i18.webp"  
+
   ],
   [
     "https://picsum.photos/200/300?random=22", 
@@ -86,34 +81,37 @@ const thumbnailSets = [
 
 
 const topTexts = [
-    "BREATHTAKING", "INNOVATIVE", "", "SEAMLESS", "INSIGHTFUL", "FLATTERING", "PERSONALIZED", "COMPREHENSIVE", "VERSATILE", "VERSATILE", "AMAZING",
-    "STUNNING", "CUSTOMIZED", "COMPLEMENTARY", "TAILORED", "CURATED", "SIGNATURE", "EFFECTIVE", "EFFECTIVE", "CAPITVATING", "ALL OF IT"
+  "BREATHTAKING", "INSIGHTFUL", "FLATTERING", 
+  "PERSONALIZED", "COMPREHENSIVE", "INNOVATIVE", "VERSATILE", 
+  "EXCEPTIONAL", "STUNNING", "CUSTOMIZED", "TRENDY",
+  "SEAMLESS", "CURATED", "CAPTIVATING", "ALL OF IT"
 ];
 
 const bottomTexts = [
-    "COVER", "VIRTUAL TRY-ON", "", "LOOK BOOK", 
-    "FACIAL ANALYSIS", "HAIRSTYLE RECOMMENDATIONS", "MAKEUP GUIDE", 
-    "BODY ASSESSMENT", "OUTFIT INSPIRATIONS", "OUTFIT INSPIRATIONS", "SEASONAL TRENDS", "OCCASION-BASED LOOKS", 
-    "SHOPPING LIST", "ACCESSORY SUGGESTIONS", "SKINCARE ROUTINE", "PRODUCT RECOMMENDATIONS", "FRAGRANCE RECOMMENDATIONS", 
-    "LIFESTYLE TIPS", "LIFESTYLE TIPS", "STYLE PROFILE", `AT JUST {price}`
+  "COVER", "FACIAL ANALYSIS", "HAIRSTYLE RECOMMENDATIONS", 
+  "MAKEUP GUIDE", "BODY ASSESSMENT", "AI TRY-ON", "OUTFIT INSPIRATIONS", 
+  "SEASONAL TRENDS", "OCCASION-BASED LOOKS", "SHOPPING LIST",  
+  "PRODUCT RECOMMENDATIONS", "LOOK BOOK", "ACCESSORY SUGGESTIONS", 
+  "STYLE PROFILE", "AT JUST {price}"
 ];
 
 const bottomTextColors = [
-    "#FF5733", "#33FF57", "#3357FF", "#FF33A6", "#F7AC89", "#000000", "#FF69B4", 
-    "#4682B4", "#9932CC", "#5733FF", "#FF3357", "#57FF33", "#3399FF", "#FFD700", 
-    "#F7C6B1", "#0000ff", "#DDA0DD", "#33AAFF", "#FF57AA", "#FFAA57", "#FF4500"
+  "#FF5733", "#F7AC89", "#000000", "#FF69B4", 
+  "#4682B4",  "#33FF57","#9932CC", "#5733FF", 
+  "#FFCC33", "#33FFAA", "#AA33FF", "#FF3357", 
+  "#FFD700", "#FF4500", "#FFAA57"
 ];
 
 // Before and after images (from chan.js)
 
 const beforeImages = [
-  "https://i.imgur.com/YwQELkA.jpeg",
+  "model/b1.webp",
   "https://picsum.photos/200/300?random=22",
   "https://picsum.photos/200/300?random=43", 
 ];
 
 const afterImages = [
-  "https://i.imgur.com/JRLSsvJ.jpeg",
+  "model/a1.webp",
   "https://via.placeholder.com/800x400/4682B4/333333?text=After+2",
   "https://via.placeholder.com/800x400/6495ED/333333?text=After+3"
 ];
