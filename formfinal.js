@@ -899,7 +899,7 @@ function setPriceForC(countryCod,discount) {
 
     // Emerging Markets (adjusted for purchasing power)
     'BR': { price: 99, currency: 'BRL' },
-    'IN': { price: 12, currency: 'INR' }, // Large potential market
+    'IN': { price: 1299, currency: 'INR' }, // Large potential market
     'MX': { price: 379, currency: 'MXN' },
     'TH': { price: 699, currency: 'THB' },
     'MY': { price: 89, currency: 'MYR' },
